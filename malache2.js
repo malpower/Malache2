@@ -13,4 +13,15 @@
  */
 
 
+var net=require("net");
+var Connection=require("./objects/Connection");
+var conf=require("./conf");
+conf.cwd=process.cwd()+"/";
 
+
+var server=net.createServer(function(socket)
+{
+    var conn=new Connection(socket);
+});
+
+server.listen(8080);
