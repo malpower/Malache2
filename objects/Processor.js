@@ -3,6 +3,7 @@ var conf=require("../conf");
 var QueryString=require("querystring");
 var fs=require("fs");
 var path=require("path");
+var Active=require("./Active");
 
 
 
@@ -39,7 +40,10 @@ function Processor(req,res)
     {
         qstring={};
     }
-    //active here.
+    if (Active(req,res))
+    {
+        return false;
+    }
     var filepath=vd+"/Templates"+url;
     console.log(filepath);
     fs.stat(filepath,function(err,stat)

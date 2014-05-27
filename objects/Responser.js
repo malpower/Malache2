@@ -18,13 +18,23 @@ function Responser(client)
                 "Content-Type": "text/html;charset=utf-8",
                 "Cache-Control": "private",
                 "Author": "malpower"};
-    var cookie=new Object;
+    var cookies=new Object;
     var responseBody=new Buffer(0);
     this.headers=header;
     var bufferSent=0;
+    this.setCookie=function(k,v)
+    {
+        cookies[k]=String(v);
+    };
     this.sendHeader=function()
     {
         client.write("HTTP/1.1 "+this.statusCode+" "+(states[this.statusCode] || "OK")+"\r\n");
+        header["Set-Cookie"]=new Array;
+        for (var x in cookies)
+        {
+            header["Set-Cookie"].push(x+"="+cookies[x]);
+        }
+        header["Set-Cookie"]=header["Set-Cookie"].join("; ");
         for (var x in header)
         {
             client.write(x+": "+header[x]+"\r\n");
@@ -66,23 +76,14 @@ function Responser(client)
         if (header["Connection"]=="Keep-Alive")
         {
             header["Content-Length"]=String(responseBody.length);
-            client.write("HTTP/1.1 "+this.statusCode+" "+(states[this.statusCode] || "OK")+"\r\n");
-            for (var x in header)
-            {
-                client.write(x+": "+header[x]+"\r\n");
-            }
-            client.write("\r\n");
+            this.sendHeader();
             client.write(responseBody);
         }
         else
         {
             header["Content-Length"]=String(responseBody.length);
             client.write("HTTP/1.1 "+this.statusCode+" "+(states[this.statusCode] || "OK")+"\r\n");
-            for (var x in header)
-            {
-                client.write(x+": "+header[x]+"\r\n");
-            }
-            client.write("\r\n");
+            this.sendHeader();
             client.write(responseBody);
             client.end();
             client.destroy();

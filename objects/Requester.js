@@ -1,3 +1,7 @@
+var QueryString=require("querystring");
+
+
+
 function Requester(raw,client)
 {
     this.method=raw.method || "UNKNOE";
@@ -21,6 +25,14 @@ function Requester(raw,client)
     {
         return postChunk;
     };
+    this.cookies=new Object;
+    if (raw.headers["Cookie"])
+    {
+        var cookies=raw.headers["Cookie"];
+        cookies=cookies.replace(/;\s/g,"&");
+        cookies=QueryString.parse(cookies);
+        this.cookies=cookies;
+    }
 }
 
 module.exports=Requester;

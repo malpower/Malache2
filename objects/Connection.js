@@ -4,6 +4,7 @@ var Requester=require("./Requester");
 var Responser=require("./Responser");
 var Processor=require("./Processor");
 var conf=require("../conf");
+var cp=require("child_process");
 
 
 function Connection(client)
@@ -84,7 +85,7 @@ function Connection(client)
             buffer=Buffer.concat([buffer,chunk]);
             if (buffer.length<postLength)
             {
-                clinet.once(ReadPost);
+                client.once("data",ReadPost);
                 return;
             }
             var postData=buffer.slice(0,postLength);
