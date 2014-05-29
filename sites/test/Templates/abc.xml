@@ -1,0 +1,8 @@
+<%=picName%>
+
+<br />
+<%=application.ok%>
+
+<br /><br />
+<br />
+<img src="pic.ajs" />

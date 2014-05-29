@@ -110,11 +110,9 @@ function Connection(client)
     }
     client.once("data",CheckBuffer).on("error",function(e)
     {
-        console.log("remote connection error!");
         console.log(e.stack);
     }).on("close",function()
     {
-        console.log("CONNECTION LOST!");
         delete buffer;
     });
 }

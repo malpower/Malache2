@@ -9,6 +9,7 @@ var Active=require("./Active");
 
 function Processor(req,res)
 {
+    console.log(req.url);
     var url=req.url;
     var vd=conf.domains[req.headers.Host];
     if (typeof(vd)!="string")
@@ -28,10 +29,14 @@ function Processor(req,res)
         console.log("Please create a config file at: \r\n");
         console.log("./"+vd+"/conf.js\r\n");
         console.log("-------------------------------------------\r\n\r\n");
-        process.exit(1);
+        return;
     }
     var qstring=url.split("?")[1];
     url=url.split("?")[0];
+    if (url.substring(url.length-1,url.length)=="/")
+    {
+        url+=siteConf.defaultPage;
+    }
     if (qstring!=undefined)
     {
         qstring=QueryString.parse(qstring);
@@ -45,7 +50,6 @@ function Processor(req,res)
         return false;
     }
     var filepath=vd+"/Templates"+url;
-    console.log(filepath);
     fs.stat(filepath,function(err,stat)
     {
         if (err)

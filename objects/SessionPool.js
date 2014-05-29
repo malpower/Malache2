@@ -1,3 +1,6 @@
+var conf=require("../conf");
+
+
 var srs=new String;
 for (var i=0;i<12;i++)
 {
