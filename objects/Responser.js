@@ -24,7 +24,7 @@ function Responser(client)
     var bufferSent=0;
     this.setCookie=function(k,v)
     {
-        cookies[k]=String(v);
+        cookies[String(k)]=String(v);
     };
     this.sendHeader=function()
     {

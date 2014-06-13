@@ -8,7 +8,7 @@
  * You can also share your files on http with
  * this simple http server.Conf.js is a configure
  * file for this simple server.Anthor named 
- * malpower who is web programmer in Chengdu.
+ * malpower who is a web programmer in Chengdu.
  * Email: malpower@ymail.com
  */
 
@@ -17,7 +17,7 @@ var net=require("net");
 var Connection=require("./objects/Connection");
 var conf=require("./conf");
 conf.cwd=process.cwd()+"/";
-var cp=require("child_process");
+
 
 
 

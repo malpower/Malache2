@@ -1,11 +1,10 @@
 var EJS=require("ejs");
 var fs=require("fs");
 
-
-function LoadJsCode(req,res,session,application,sid,siteConf,jsCode,tpPath)
+function LoadJsCode(req,res,session,application,sid,siteConf,jsCode,tpPath,home)
 {
     res.headers["Connection"]="Keep-Alive";
-    var jsCode="function(request,response,session,application){"+jsCode+"}";
+    var jsCode="function(request,response,session,application,require,home){"+jsCode+"}";
     try
     {
         var pager=(new Function("return "+jsCode+";"))();
@@ -49,7 +48,7 @@ function LoadJsCode(req,res,session,application,sid,siteConf,jsCode,tpPath)
         try
         {
             res.setCookie("malache2SESSION",sid);
-            pager(req,res,session,application);
+            pager(req,res,session,application,require,home+"/Templates");
         }
         catch (e)
         {

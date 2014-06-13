@@ -68,7 +68,8 @@ function Active(req,res)
                              sid,
                              siteConf,
                              jsCode,
-                             homeTemplates+reqFile+"."+siteConf.template);
+                             homeTemplates+reqFile+"."+siteConf.template,
+                             home);
         });
     }
     Tools.formatParameters(req,Prepare);
