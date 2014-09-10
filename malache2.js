@@ -9,6 +9,9 @@
  * this simple http server.Conf.js is a configure
  * file for this simple server.Anthor named 
  * malpower who is a web programmer in Chengdu.
+ * This is the seconds edition of malache, you
+ * can visit [https://github.com/malpower/Malache2]
+ * to get the latest code.
  * Email: malpower@ymail.com
  */
 
@@ -22,8 +25,14 @@ conf.cwd=process.cwd()+"/";
 
 
 var server=net.createServer(function(socket)
-{
+{//main server, collect sockets connections simply and create a Connection with sockets collected.
     new Connection(socket);
 });
 
 server.listen(conf.port);
+
+server.on("error",function(err)
+{//catch errors when listening failed.
+	console.log("server starting failed, check conf.js for port.");
+	console.log(err);
+});

@@ -1,3 +1,9 @@
+/* this module solve active requests.
+ * it prepare data, session and parameters for pager.
+ */
+
+
+
 var conf=require("../conf");
 var Path=require("path");
 var Tools=require("./Tools");
@@ -42,6 +48,8 @@ function Active(req,res)
         return false;
     }
     res.headers["Content-Type"]=siteConf.contentTypes[ename] || "unknow/*";
+    	//set content-type header of response.
+    
     var reqFile=reqPath.substring(0,reqPath.lastIndexOf("."));
     function Prepare()
     {
@@ -53,15 +61,15 @@ function Active(req,res)
             session=sessionPool.get(sid);
         }
         fs.readFile(homeActives+reqFile+".js","utf8",function(err,jsCode)
-        {
+        {//read js code from active folder.
             if (err)
-            {
+            {//not found.
                 console.log(err);
                 res.statusCode=404;
                 res.end("404 not found!");
                 return;
             }
-            Pager.loadJsCode(req,
+            Pager.loadJsCode(req,					//this is the start of execution.
                              res,
                              session,
                              application,

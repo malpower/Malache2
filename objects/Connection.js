@@ -1,3 +1,12 @@
+/* this module make a socket connection into a http connection.
+ * this Connection support only GET and POST method.
+ * it holds 2 ways of requests, alive and close.
+ */
+
+
+
+
+
 var Tools=require("./Tools");
 var net=require("net");
 var Requester=require("./Requester");
@@ -50,9 +59,9 @@ function Connection(client)
         var req=new Requester(rawReq,client);
         var res=new Responser(client);
         if (req.method=="GET")
-        {
+        {//sovle GET
             try
-            {
+            {//send request and response to Processor.
                 Processor(req,res);
             }
             catch (e)
@@ -74,7 +83,7 @@ function Connection(client)
         function ReadPost(chunk)
         {
             if (buffer.length+chunk.length>conf.maxPostSize)
-            {
+            {//post data out of limit.
                 delete req;
                 delete res;
                 delete postData;
@@ -103,10 +112,10 @@ function Connection(client)
                 client.destroy();
                 return;
             }
-            CheckBuffer(new Buffer(0));
+            CheckBuffer(new Buffer(0));//requesting finish.
         }
         postLength=Number(req.headers["Content-Length"]);
-        ReadPost(new Buffer(0));
+        ReadPost(new Buffer(0));//start new post reading.
     }
     client.once("data",CheckBuffer).on("error",function(e)
     {

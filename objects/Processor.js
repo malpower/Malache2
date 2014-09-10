@@ -11,15 +11,15 @@ function Processor(req,res)
 {
     console.log(req.url);
     var url=req.url;
-    var vd=conf.domains[req.headers.Host];
+    var vd=conf.domains[req.headers.Host];		//get virtual directory.
     if (typeof(vd)!="string")
-    {
+    {//check if the virtual directory is correct.
         res.statusCode=503;
         res.end("BAD DOMAIN!");
         return;
     }
     try
-    {
+    {//get configurations of requested virtual directory.
         var siteConf=require("../"+vd+"/conf.js");
     }
     catch (e)
@@ -33,16 +33,16 @@ function Processor(req,res)
     }
     url=url.split("?")[0];
     if (url.substring(url.length-1,url.length)=="/")
-    {
+    {//if requested url is root, append the defaultPage to url.
         url+=siteConf.defaultPage;
     }
     if (Active(req,res))
-    {
+    {//for active requests.
         return false;
     }
     var filepath=vd+"/Templates"+url;
     fs.stat(filepath,function(err,stat)
-    {
+    {//for static requests.
         if (err)
         {
             res.statusCode=404;
@@ -63,7 +63,7 @@ function Processor(req,res)
             res.headers["Content-Length"]="0";
             res.headers["Last-Modified"]=stat.mtime;
             res.headers["Cache-Control"]="Private";
-            res.sendHeader();
+            res.sendHeaders();
             res.flush();                                       //does not response data body, browser will read this file in it's cache.
             return false;
         }
@@ -72,7 +72,7 @@ function Processor(req,res)
         res.headers["Last-Modified"]=stat.mtime;
         res.headers["Content-Type"]=siteConf.contentTypes[path.extname(filepath)] || "unknow/*";                   //set default content-type.
         res.headers["Content-Length"]=stat.size;
-        res.sendHeader();
+        res.sendHeaders();
         var rs=fs.createReadStream(filepath,{autoClose: true});
         rs.on("data",function(chunk)
         {
