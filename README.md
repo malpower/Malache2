@@ -19,6 +19,7 @@ in folder Requires, you should put your modules in.
 in folder Templates, you should put your html( or any static file) in.
 
 and then, create a conf.js in that folder you created in /sites, and edit it like this:
+```javascript
 module.exports={active: "ajs",			//active file type
                 template: "xml",		//tempalte file type	
                 defaultPage: "index.ajs",		//default page
@@ -29,7 +30,7 @@ module.exports={active: "ajs",			//active file type
                                ".gif": "image/*",
                                ".txt": "text/plain;charset=utf-8",
                                ".ajs": "text/html;charst=utf-8"}};
-
+```
 when you created a conf.js in that folder you created in /sites, you can start to make your site.
 for example, we created a conf.js like what we've showed above in our virtual directory.
 and we've created folders Actives, Requires, Templates in virtual directory.
