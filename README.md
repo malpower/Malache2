@@ -54,4 +54,4 @@ ctime: <%=ctime%>
 ```
 <br /><br />
 all finished. now, you can go to visit your site.
-for more details, visit [wiki](wiki/).
+for more details, visit [wiki](https://github.com/malpower/Malache2/wiki).
