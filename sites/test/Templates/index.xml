@@ -6,7 +6,7 @@
     </head>
     <body>
         <a href="mweb.html"><%=OK%></a>
-        <form action="mweb.html" method="post" enctype="multipart/form-data">
+        <form action="abc.ajs?kk=12&kk=lsdkjf" method="post" enctype="multipart/form-data">
             <input type="text" name="OK" /><br />
             <input type="file" name="f1" /><br />
             <input type="submit" />

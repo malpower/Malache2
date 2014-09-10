@@ -22,6 +22,15 @@ function Responser(client)
     var responseBody=new Buffer(0);
     this.headers=header;
     var bufferSent=0;
+    this.error=function(err)
+    {
+        this.statusCode=err.statusCode || 500;
+        header["Keep-Alive"]="close";
+        delete header["Content-Length"];
+        header["Content-Type"]="text/plain;charset=utf-8";
+        this.sendHeaders();
+        client.end(err.message+"\r\n\r\n"+err.stack);
+    };
     this.setCookie=function(k,v)
     {
         cookies[String(k)]=String(v);

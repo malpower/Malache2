@@ -1,6 +1,7 @@
 var EJS=require("ejs");
 var fs=require("fs");
 var MalacheTool=require("./MalacheTool");
+var domain=require("domain");
 
   
 
@@ -49,18 +50,16 @@ function LoadJsCode(req,res,session,application,sid,siteConf,jsCode,tpPath,home)
     };
     setImmediate(function()
     {
-        try
+        var vm=domain.create();
+        vm.on("error",function(err)
+        {
+            res.error(err);
+        });
+        vm.run(function()
         {
             res.setCookie("malache2SESSION",sid);
             pager(req,res,session,application,new MalacheTool(home),home+"/Templates");
-        }
-        catch (e)
-        {
-            res.statusCode=500;
-            res.headers["Content-Type"]="text/plain;charset=utf-8";
-            res.end(e.stack);
-            return;
-        }
+        });
     });
 }
 

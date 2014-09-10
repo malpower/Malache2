@@ -43,7 +43,13 @@ function Active(req,res)
         reqPath+=siteConf.defaultPage;
     }
     var ename=Path.extname(reqPath);
-    if (ename!=("."+siteConf.active) && ename!=("."+siteConf.template))
+    if (ename==("."+siteConf.template))
+    {
+        res.statusCode=404;
+        res.end("404 not found!");
+        return true;
+    }
+    if (ename!=("."+siteConf.active))
     {
         return false;
     }
