@@ -26,7 +26,7 @@ function Responser(client)
     {
         cookies[String(k)]=String(v);
     };
-    this.sendHeader=function()
+    this.sendHeaders=function()
     {
         client.write("HTTP/1.1 "+this.statusCode+" "+(states[this.statusCode] || "OK")+"\r\n");
         header["Set-Cookie"]=new Array;
