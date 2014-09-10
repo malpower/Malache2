@@ -26,4 +26,4 @@ var server=net.createServer(function(socket)
     new Connection(socket);
 });
 
-server.listen(8080);
+server.listen(conf.port);
