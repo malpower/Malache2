@@ -40,20 +40,19 @@ function Responser(client)
             client.write(x+": "+header[x]+"\r\n");
         }
         client.write("\r\n");   
-    }
+    };
     this.sendBuffer=function(chunk)
     {
         client.write(chunk);
         bufferSent+=chunk.length;
-    }
+    };
     this.flush=function()
     {
         if (header["Connection"]=="close")
         {
             client.end();
-            client.destroy();
         }
-    }
+    };
     this.write=function(chunk)
     {
         if (!(chunk instanceof Buffer) && !(typeof(chunk)=="string"))
@@ -86,7 +85,6 @@ function Responser(client)
             this.sendHeader();
             client.write(responseBody);
             client.end();
-            client.destroy();
         }
     };
 }
