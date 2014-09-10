@@ -1,16 +1,9 @@
 var EJS=require("ejs");
 var fs=require("fs");
+var MalacheTool=require("./MalacheTool");
 
+  
 
-
-function MalacheTool(reqPath)
-{
-	this.require=require;
-	this.loadModule=function(mn)
-	{
-		return require("../"+reqPath+"/Requires/"+mn);
-	};
-}
 
 function LoadJsCode(req,res,session,application,sid,siteConf,jsCode,tpPath,home)
 {
