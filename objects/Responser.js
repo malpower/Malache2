@@ -71,11 +71,10 @@ function Responser(client)
         {
             this.write(chunk);
         }
-        
         if (header["Connection"]=="Keep-Alive")
         {
             header["Content-Length"]=String(responseBody.length);
-            this.sendHeader();
+            this.sendHeaders();
             client.write(responseBody);
         }
         else

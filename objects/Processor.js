@@ -14,7 +14,7 @@ function Processor(req,res)
     var vd=conf.domains[req.headers.Host];
     if (typeof(vd)!="string")
     {
-        res.statusCode=500;
+        res.statusCode=503;
         res.end("BAD DOMAIN!");
         return;
     }
@@ -31,19 +31,10 @@ function Processor(req,res)
         console.log("-------------------------------------------\r\n\r\n");
         return;
     }
-    var qstring=url.split("?")[1];
     url=url.split("?")[0];
     if (url.substring(url.length-1,url.length)=="/")
     {
         url+=siteConf.defaultPage;
-    }
-    if (qstring!=undefined)
-    {
-        qstring=QueryString.parse(qstring);
-    }
-    else
-    {
-        qstring={};
     }
     if (Active(req,res))
     {

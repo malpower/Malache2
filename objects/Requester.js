@@ -18,7 +18,7 @@ function Requester(raw,client)
 	        return false;
         }
         postChunk=chunk;
-        this.setPost=null;
+        delete this.setPost;
         return true;
     };
     this.getPostBuffer=function()
