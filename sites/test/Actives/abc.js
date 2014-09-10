@@ -1,4 +1,4 @@
 
 session.myPicture=request.files[0].chunk;
-
-response.render({picName: request.files[0].filename,application: session,kk: request.parameters["kk"]});
+var x=malache.loadModule("ok.js");
+response.render({jj: x,picName: request.files[0].filename,params: request.parameters,kk: request.parameters["kk"]});

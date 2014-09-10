@@ -1,10 +1,21 @@
 var EJS=require("ejs");
 var fs=require("fs");
 
+
+
+function MalacheTool(reqPath)
+{
+	this.require=require;
+	this.loadModule=function(mn)
+	{
+		return require("../"+reqPath+"/Requires/"+mn);
+	};
+}
+
 function LoadJsCode(req,res,session,application,sid,siteConf,jsCode,tpPath,home)
 {
     res.headers["Connection"]="Keep-Alive";
-    var jsCode="function(request,response,session,application,require,home){"+jsCode+"}";
+    var jsCode="function(request,response,session,application,malache,home){"+jsCode+"}";
     try
     {
         var pager=(new Function("return "+jsCode+";"))();
@@ -48,7 +59,7 @@ function LoadJsCode(req,res,session,application,sid,siteConf,jsCode,tpPath,home)
         try
         {
             res.setCookie("malache2SESSION",sid);
-            pager(req,res,session,application,require,home+"/Templates");
+            pager(req,res,session,application,new MalacheTool(home),home+"/Templates");
         }
         catch (e)
         {

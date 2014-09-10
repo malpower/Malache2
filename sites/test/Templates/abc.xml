@@ -1,10 +1,12 @@
 <%=picName%>
 
 <br />
-<%=application.ok%>
+<%=params.OK%>
 
 <br /><br />
 <br />
 <%=kk%>
+<br />
+<%=jj.title%>
 <br />
 <img src="pic.ajs" />
