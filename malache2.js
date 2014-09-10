@@ -41,11 +41,12 @@ server.on("error",function(err)
 
 
 console.log("============Malache2============");
+console.log("Version: 201409102217D");
 console.log("Server is running on port: "+conf.port);
 console.log("Domains:");
 for (var x in conf.domains)
 {
-	console.log("    "+x);
+	console.log("  "+x);
 }
 console.log("================================");
 
