@@ -23,7 +23,7 @@ and then, create a conf.js in that folder you created in /sites, and edit it lik
 module.exports={active: "ajs",			//active file type
                 template: "xml",		//tempalte file type	
                 defaultPage: "index.ajs",		//default page
-                contentTypes: {".html": "text/html;charset=utf-8",		//content types, this will be responsed when user requests.
+                contentTypes: {".html": "text/html;charset=utf-8",
                                ".htm": "text/html;charset=utf-8",
                                ".jpg": "image/*",
                                ".png": "image/*",
@@ -36,11 +36,13 @@ for example, we created a conf.js like what we've showed above in our virtual di
 and we've created folders Actives, Requires, Templates in virtual directory.
 now, i can make a script named index.js, and put it into Actives.
 edit index.js like this:
+```javascript
 	var bob={name: "bob",age: 20};
 	response.render({person: bob,ctime: new Date});
-	
+```
 	
 and then, we create index.xml in Templates, and edit it like this: 
+```html
 <html>
 <body>
 name: <%=bob.name%><br />
@@ -48,6 +50,6 @@ age: <%=bob.age%><br />
 ctime: <%=ctime%>
 </body>
 </html>
-
+```
 
 all finished. now, you can go to visit your site.
