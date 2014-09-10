@@ -4,7 +4,7 @@ Malache2
 A new design of malache
 this soft is under Apache v2 license.
 
-Malache2 is a web server based on node.js.
+Malache2 is a web server based on node.js.<br />
 you can build a website/webapp with malache2, and you need write codes in javascript.
 you can download the source code of malache2 directly to run it with node.js.
 sample code has already in the source code.
