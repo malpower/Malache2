@@ -40,7 +40,8 @@ edit index.js like this:
 	var bob={name: "bob",age: 20};
 	response.render({person: bob,ctime: new Date});
 ```
-	<br />
+
+
 and then, we create index.xml in Templates, and edit it like this: 
 ```html
 <html>
