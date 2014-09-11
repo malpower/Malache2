@@ -62,7 +62,23 @@ function Connection(client)
         {//sovle GET
             try
             {//send request and response to Processor.
-                Processor(req,res);
+                //Processor(req,res);
+                var wk=cp.fork("./objects/Shadow");
+                wk.on("message",function(o,hdlr)
+                {
+                	console.log("MAIN");
+                	if (o.status=="online")
+                	{
+                		wk.send({operation: "request",
+                				 request: {type: "GET"},
+                				 rawReq: rawReq},client);
+    				}
+    				if (o.status=="finish")
+    				{
+    					client=hdlr;
+    					//wk.kill("SIGHUP");
+    				}
+				});
             }
             catch (e)
             {
@@ -71,7 +87,14 @@ function Connection(client)
                 client.end(Tools.set500Error(String(e.stack)));
                 client.destroy();
             }
-            client.once("data",CheckBuffer);
+            try
+            {
+            	client.once("data",CheckBuffer);
+            }
+            catch (e)
+            {
+            	console.log("...");
+            }
             return false;
         }
         if (req.method!="POST")

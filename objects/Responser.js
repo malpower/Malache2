@@ -94,6 +94,14 @@ function Responser(client)
             client.write(responseBody);
             client.end();
         }
+        try
+        {
+        	process.send({operator: "report",status: "finish"},client);
+        }
+        catch (e)
+        {
+        	//
+        }
     };
 }
 
