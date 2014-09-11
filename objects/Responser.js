@@ -11,6 +11,10 @@ function Responser(client)
     states[404]="Not Found";
     states[403]="Not Allow";
     this.statusCode=200;
+    this.getClient=function()
+    {
+        return client;
+    };
     var header={"Connection": "close",
                 "Date": (new Date),
                 "Server": "Malache2",
@@ -24,12 +28,15 @@ function Responser(client)
     var bufferSent=0;
     this.error=function(err)
     {
+        console.log("A");
         this.statusCode=err.statusCode || 500;
-        header["Keep-Alive"]="close";
+        header["Connection"]="close";
         delete header["Content-Length"];
         header["Content-Type"]="text/plain;charset=utf-8";
-        this.sendHeaders();
-        client.end(err.message+"\r\n\r\n"+err.stack);
+        console.log("B");
+        console.log("C");
+        this.end(err.message+"\r\n\r\n"+err.stack);
+        console.log("D");
     };
     this.setCookie=function(k,v)
     {
@@ -82,25 +89,20 @@ function Responser(client)
         }
         if (header["Connection"]=="Keep-Alive")
         {
+            console.log("AA");
             header["Content-Length"]=String(responseBody.length);
             this.sendHeaders();
+            console.log(responseBody.toString());
             client.write(responseBody);
         }
         else
         {
+            console.log("BB");
             header["Content-Length"]=String(responseBody.length);
             client.write("HTTP/1.1 "+this.statusCode+" "+(states[this.statusCode] || "OK")+"\r\n");
             this.sendHeaders();
             client.write(responseBody);
-            client.end();
-        }
-        try
-        {
-        	process.send({operator: "report",status: "finish"},client);
-        }
-        catch (e)
-        {
-        	//
+            //client.end();
         }
     };
 }

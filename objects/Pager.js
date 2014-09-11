@@ -23,6 +23,10 @@ function LoadJsCode(req,res,session,application,sid,siteConf,jsCode,tpPath,home,
     }
     res.render=function(ro)
     {
+        if (!ro)
+        {
+            ro=new Object();
+        }
         fs.readFile(tpPath,"utf8",function(err,tpText)
         {
             if (err)
@@ -89,10 +93,11 @@ function LoadJsCode(req,res,session,application,sid,siteConf,jsCode,tpPath,home,
 	        }
 	        catch (e)
 	        {
+	            cosnole.log(e.stack);
 	        	//forget it, if there's problem on processing error log.
 	        }
             res.error(err);
-            vm.dispose();
+            //vm.dispose();
         });
         vm.run(function()
         {

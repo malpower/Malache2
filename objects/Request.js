@@ -16,12 +16,13 @@ var conf=require("../conf");
 var cp=require("child_process");
 
 
-function Connection(client)
+function Request(client,recieved)
 {
     if (!(client instanceof net.Socket))
     {
         return false;
     }
+    console.log(recieved);
     var postLength=0;
     var buffer=new Buffer(0);
     function CheckBuffer(chunk)
@@ -32,7 +33,7 @@ function Connection(client)
             client.once("data",CheckBuffer);
             return;
         }
-        var tmp=buffer.toString("binary");
+        var tmp=buffer.toString("ascii");
         if (tmp.indexOf("\r\n\r\n")==-1)
         {
             client.once("data",CheckBuffer);
@@ -55,22 +56,14 @@ function Connection(client)
             delete buffer;
             return;
         }
+        buffer=buffer.slice(tmp.indexOf("\r\n\r\n")+4);
         var req=new Requester(rawReq,client);
         var res=new Responser(client);
         if (req.method=="GET")
         {//sovle GET
             try
             {//send request and response to Processor.
-                //Processor(req,res);
-                var wk=cp.fork("./objects/Shadow");
-                wk.on("message",function(o,hdlr)
-                {
-                	if (o.status=="online")
-                	{
-                		wk.send({operation: "request",
-                				 recieved: buffer},client);
-    				}
-				});
+                Processor(req,res);
             }
             catch (e)
             {
@@ -79,7 +72,6 @@ function Connection(client)
                 client.end(Tools.set500Error(String(e.stack)));
                 client.destroy();
             }
-            /*
             try
             {
             	client.once("data",CheckBuffer);
@@ -88,7 +80,6 @@ function Connection(client)
             {
             	console.log("...");
             }
-            */
             return false;
         }
         if (req.method!="POST")
@@ -114,21 +105,12 @@ function Connection(client)
                 client.once("data",ReadPost);
                 return;
             }
+            var postData=buffer.slice(0,postLength);
+            buffer=buffer.slice(postLength);
             try
             {
-                /*
                 req.setPost(postData);
                 Processor(req,res);
-                */
-                var wk=cp.fork("./objects/Shadow");
-                wk.on("message",function(o,hdlr)
-                {
-                    if (o.status=="online")
-                    {
-                        wk.send({operation: "request",
-                                 recieved: buffer},client);
-                    }
-                });
             }
             catch (e)
             {
@@ -138,11 +120,13 @@ function Connection(client)
                 client.destroy();
                 return;
             }
+            CheckBuffer(new Buffer(0));//requesting finish.
         }
         postLength=Number(req.headers["Content-Length"]);
         ReadPost(new Buffer(0));//start new post reading.
     }
-    client.once("data",CheckBuffer).on("error",function(e)
+    CheckBuffer(recieved);
+    client.on("error",function(e)
     {
         console.log(e.stack);
     }).on("close",function()
@@ -152,4 +136,4 @@ function Connection(client)
 }
 
 
-module.exports=Connection;
+module.exports=Request;

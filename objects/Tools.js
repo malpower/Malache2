@@ -136,7 +136,7 @@ function OrganizationFile(req,fn)
     }
     catch (e)
     {
-        console.log("ORG FILE: "+e.message);
+        console.log("ORG FILE: "+e.stack);
     }
 }
 

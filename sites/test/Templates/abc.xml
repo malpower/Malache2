@@ -1,3 +1,4 @@
+<meta charset="utf-8" />
 <%=picName%>
 
 <br />
@@ -7,6 +8,5 @@
 <br />
 <%=kk%>
 <br />
-<%=jj.title%>
 <br />
 <img src="pic.ajs" />
