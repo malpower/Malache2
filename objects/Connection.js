@@ -60,8 +60,7 @@ function Connection(client)
         if (req.method=="GET")
         {//sovle GET
             try
-            {//send request and response to Processor.
-                //Processor(req,res);
+            {//send request and response to Shadow.
                 var wk=cp.fork("./objects/Shadow");
                 wk.on("message",function(o,hdlr)
                 {
@@ -116,10 +115,6 @@ function Connection(client)
             }
             try
             {
-                /*
-                req.setPost(postData);
-                Processor(req,res);
-                */
                 var wk=cp.fork("./objects/Shadow");
                 wk.on("message",function(o,hdlr)
                 {
