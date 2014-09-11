@@ -30,8 +30,8 @@ function Active(req,res)
         var siteConf=require("../"+conf.domains[host]+"/conf");
         var home="./"+conf.domains[host];
         var homeTemplates=home+"/Templates";
-        var homeActives=home+"/Actives";
-        var homeRequires=home+"/Requires";
+        var homeActives=home+"/Activities";
+        var homeRequires=home+"/Plugs";
     }
     catch (e)
     {

@@ -1,9 +1,9 @@
 function MalacheTool(reqPath)
 {
     this.require=require;
-    this.loadModule=function(mn)
+    this.loadPlug=function(mn)
     {
-        return require("../"+reqPath+"/Requires/"+mn);
+        return require("../"+reqPath+"/Plugs/"+mn);
     };
 }
 

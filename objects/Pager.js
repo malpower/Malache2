@@ -53,12 +53,15 @@ function LoadJsCode(req,res,session,application,sid,siteConf,jsCode,tpPath,home,
         var vm=domain.create();
         vm.on("error",function(err)
         {
+        	//res.error(err);
+        	//return;
+        	var epos=0;
         	var stack=err.stack.split("\n");
         	try
         	{
 	        	for (var i=0;i<stack.length;i++)
 	        	{
-	        		if (stack[i].indexOf("eval")!=-1 && stack[i].indexOf("LoadJsCode")!=-1 && stack[i].indexOf("15:20")!=-1)
+	        		if (stack[i].indexOf("eval")!=-1 && stack[i].indexOf("LoadJsCode")!=-1)
 	        		{
 	        			var epos=stack[i].split(",")[1];
 	        			var prefix=stack[i].split(",")[0];
@@ -71,10 +74,17 @@ function LoadJsCode(req,res,session,application,sid,siteConf,jsCode,tpPath,home,
 	        			{
 	        				blocks[0]=active;
 	        			}
+	        			var scope=stack[i].split("(")[0];
+	        			scope=scope.substring(7);
+	        			if (scope=="eval ")
+	        			{
+	        				epos=i;
+	        			}
 	        			blocks[1]=String(Number(blocks[1])-1);
-	        			stack[i]="    at ActiveBlock ("+blocks.join(":");
+	        			stack[i]="    at "+scope+"("+blocks.join(":");
 	        		}
 	        	}
+	        	stack[epos]=stack[epos].replace("at eval (","at Activity (");
 	        	err.stack=stack.join("\n");
 	        }
 	        catch (e)
@@ -82,6 +92,7 @@ function LoadJsCode(req,res,session,application,sid,siteConf,jsCode,tpPath,home,
 	        	//forget it, if there's problem on processing error log.
 	        }
             res.error(err);
+            vm.dispose();
         });
         vm.run(function()
         {
