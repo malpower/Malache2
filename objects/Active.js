@@ -83,7 +83,8 @@ function Active(req,res)
                              siteConf,
                              jsCode,
                              homeTemplates+reqFile+"."+siteConf.template,
-                             home);
+                             home,
+                             homeActives+reqFile+".js");
         });
     }
     Tools.formatParameters(req,Prepare);
