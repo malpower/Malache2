@@ -22,7 +22,6 @@ function Request(client,recieved)
     {
         return false;
     }
-    console.log(recieved);
     var postLength=0;
     var buffer=new Buffer(0);
     function CheckBuffer(chunk)

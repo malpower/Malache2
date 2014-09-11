@@ -9,3 +9,4 @@ module.exports={active: "ajs",
                                ".gif": "image/*",
                                ".txt": "text/plain;charset=utf-8",
                                ".ajs": "text/html;charset=utf-8"}};
+   

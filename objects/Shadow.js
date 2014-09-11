@@ -6,14 +6,12 @@ var Processor=require("./Processor");
 var conf=require("../conf");
 var Request=require("./Request");
 
-var holder;
 
 
 process.on("message",function(o,client)
 {
 	if (o.operation=="request")
 	{
-	    holder=client;
 	    var rec=new Buffer(o.recieved);
 		Request(client,rec);
 	}
