@@ -13,9 +13,9 @@ when you create a new site, you have to create a folder in /sites, and edit /con
 we call that folder you created in /sites "virtual directory".<br />
 <br />
 <br />
-and then, in that folder you created, you need to create 3 more folders, Actives, Requires and Templates.<br />
-in folder Actives, you should put your scripts in.<br />
-in folder Requires, you should put your modules in.<br />
+and then, in that folder you created, you need to create 3 more folders, Activities, Plugs and Templates.<br />
+in folder Activities, you should put your scripts in.<br />
+in folder Plugs, you should put your modules in.<br />
 in folder Templates, you should put your html( or any static file) in.<br />
 <br />
 and then, create a conf.js in that folder you created in /sites, and edit it like this:<br />
@@ -33,8 +33,8 @@ module.exports={active: "ajs",			//active file type
 ```
 when you created a conf.js in that folder you created in /sites, you can start to make your site.<br />
 for example, we created a conf.js like what we've showed above in our virtual directory.<br />
-and we've created folders Actives, Requires, Templates in virtual directory.<br />
-now, i can make a script named index.js, and put it into Actives.<br />
+and we've created folders Activities, Plugs, Templates in virtual directory.<br />
+now, i can make a script named index.js, and put it into Activities.<br />
 edit index.js like this:
 ```javascript
 	var bob={name: "bob",age: 20};
