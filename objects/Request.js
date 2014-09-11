@@ -78,7 +78,7 @@ function Request(client,recieved)
             }
             catch (e)
             {
-            	console.log("...");
+            	console.log(e);
             }
             return false;
         }

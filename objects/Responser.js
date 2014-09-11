@@ -28,15 +28,11 @@ function Responser(client)
     var bufferSent=0;
     this.error=function(err)
     {
-        console.log("A");
         this.statusCode=err.statusCode || 500;
         header["Connection"]="close";
         delete header["Content-Length"];
         header["Content-Type"]="text/plain;charset=utf-8";
-        console.log("B");
-        console.log("C");
         this.end(err.message+"\r\n\r\n"+err.stack);
-        console.log("D");
     };
     this.setCookie=function(k,v)
     {
@@ -89,15 +85,12 @@ function Responser(client)
         }
         if (header["Connection"]=="Keep-Alive")
         {
-            console.log("AA");
             header["Content-Length"]=String(responseBody.length);
             this.sendHeaders();
-            console.log(responseBody.toString());
             client.write(responseBody);
         }
         else
         {
-            console.log("BB");
             header["Content-Length"]=String(responseBody.length);
             client.write("HTTP/1.1 "+this.statusCode+" "+(states[this.statusCode] || "OK")+"\r\n");
             this.sendHeaders();
