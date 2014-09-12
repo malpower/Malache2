@@ -5,6 +5,7 @@ var Responser=require("./Responser");
 var Processor=require("./Processor");
 var conf=require("../conf");
 var Request=require("./Request");
+var EventEmitter=require('events').EventEmitter;
 
 
 
@@ -15,11 +16,18 @@ process.on("message",function(o,client)
 	    var rec=new Buffer(o.recieved);
 		Request(client,rec);
 	}
-	client.on("error",function(e)
+	client.once("error",function(e)
 	{
-	    console.log(e);
+	    //client.removeAllListeners();
+	}).on("close",function()
+	{
+		process.send({operation: "report",status: "close"});
 	});
 });
 
 
 process.send({operation: "report",status: "online"});
+setInterval(function()
+{
+	process.send({operation: "report",status: "alive"});
+},1000*5);

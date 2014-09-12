@@ -2,7 +2,6 @@ var EJS=require("ejs");
 var fs=require("fs");
 var MalacheTool=require("./MalacheTool");
 var domain=require("domain");
-
   
 
 
@@ -54,7 +53,7 @@ function LoadJsCode(req,res,session,application,sid,siteConf,jsCode,tpPath,home,
     };
     setImmediate(function()
     {
-        var vm=domain.create();
+    	var vm=domain.create();
         vm.on("error",function(err)
         {
         	//res.error(err);

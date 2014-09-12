@@ -14,6 +14,8 @@ var Responser=require("./Responser");
 var Processor=require("./Processor");
 var conf=require("../conf");
 var cp=require("child_process");
+var Dispatcher=require("./Dispatcher");
+var dispatcher=new Dispatcher;
 
 
 function Connection(client)
@@ -61,15 +63,7 @@ function Connection(client)
         {//sovle GET
             try
             {//send request and response to Shadow.
-                var wk=cp.fork("./objects/Shadow");
-                wk.on("message",function(o,hdlr)
-                {
-                	if (o.status=="online")
-                	{
-                		wk.send({operation: "request",
-                				 recieved: buffer},client);
-    				}
-				});
+                dispatcher.joinConnection(req.cookies["malache2SESSION"],client,buffer);
             }
             catch (e)
             {
@@ -115,20 +109,12 @@ function Connection(client)
             }
             try
             {
-                var wk=cp.fork("./objects/Shadow");
-                wk.on("message",function(o,hdlr)
-                {
-                    if (o.status=="online")
-                    {
-                        wk.send({operation: "request",
-                                 recieved: buffer},client);
-                    }
-                });
+                dispatcher.joinConnection(req.cookies["malache2SESSION"],client,buffer);
             }
             catch (e)
             {
                 //debug;
-                console.log(e.stack);
+                //console.log(e.stack);
                 client.end(Tools.set500Error(String(e.stack)));
                 client.destroy();
                 return;
@@ -139,7 +125,7 @@ function Connection(client)
     }
     client.once("data",CheckBuffer).on("error",function(e)
     {
-        console.log(e.stack);
+        //console.log(e.stack);
     }).on("close",function()
     {
         delete buffer;

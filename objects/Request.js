@@ -73,6 +73,7 @@ function Request(client,recieved)
             }
             try
             {
+            	client.removeAllListeners("data");
             	client.once("data",CheckBuffer);
             }
             catch (e)
@@ -127,7 +128,7 @@ function Request(client,recieved)
     CheckBuffer(recieved);
     client.on("error",function(e)
     {
-        console.log(e.stack);
+        //console.log(e.stack);
     }).on("close",function()
     {
         delete buffer;

@@ -9,4 +9,4 @@
 <%=kk%>
 <br />
 <br />
-<img src="pic.ajs" />
+<img src="pic.ajs?id=<%=random%>" />
