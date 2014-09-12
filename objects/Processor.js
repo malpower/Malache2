@@ -9,7 +9,6 @@ var Active=require("./Active");
 
 function Processor(req,res)
 {
-    console.log(req.url);
     var url=req.url;
     var vd=conf.domains[req.headers.Host];		//get virtual directory.
     if (typeof(vd)!="string")

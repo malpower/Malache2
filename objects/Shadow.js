@@ -30,4 +30,4 @@ process.send({operation: "report",status: "online"});
 setInterval(function()
 {
 	process.send({operation: "report",status: "alive"});
-},1000*5);
+},parseInt(conf.scriptTimeout*1000/2));

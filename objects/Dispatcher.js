@@ -13,6 +13,28 @@ function ProcessHolder()
 {
 	var wk=cp.fork("./objects/Shadow");
 	var connections=0;
+	var heart=0;
+	var heard=0;
+	var wait=0;
+	var that=this;
+	var t=setInterval(function()
+	{
+		if (wait>conf.scriptTimeout)
+		{
+			console.log("script timed out.");
+			console.log("process["+wk.pid+"] is now resatart!");
+			holders[that.id]=new ProcessHolder();
+			wk.kill();
+			clearInterval(t);
+		}
+		if (heard==heart)
+		{
+			wait++;
+			return;
+		}
+		wait=0;
+		heard=heart;
+	},1000);
 	wk.on("message",function(o)
 	{
 		if (o.status=="close")
@@ -21,7 +43,7 @@ function ProcessHolder()
 		}
 		if (o.status=="alive")
 		{
-			//...
+			heart++;
 		} 
 	});
 	this.join=function(client,content)
@@ -55,7 +77,6 @@ function Dispatcher()
 {
 	this.joinConnection=function(ss,client,content)
 	{
-		console.log(ss+".....");
 		if (ss!=undefined && map[ss]!=undefined)
 		{
 			try

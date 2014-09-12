@@ -3,5 +3,6 @@ module.exports={maxPostSize: 1024*1024*100,
                 template: "xml",
                 port: 8081,
                 handlerLength: 5,
+                scriptTimeout: 10,
                 sessionTimeout: 1000*60*10,
                 active: "ajs"};
