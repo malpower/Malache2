@@ -6,6 +6,8 @@ var Processor=require("./Processor");
 var conf=require("../conf");
 var Request=require("./Request");
 var EventEmitter=require('events').EventEmitter;
+var SessionPool=require("./SessionPool");
+var sessions=new SessionPool;
 
 
 
@@ -13,16 +15,27 @@ process.on("message",function(o,client)
 {
 	if (o.operation=="request")
 	{
+		client.once("error",function(e)
+		{
+		    //client.removeAllListeners();
+		}).on("close",function()
+		{
+			process.send({operation: "report",status: "close"});
+		});
 	    var rec=new Buffer(o.recieved);
 		Request(client,rec);
 	}
-	client.once("error",function(e)
+	if (o.operation=="query")
 	{
-	    //client.removeAllListeners();
-	}).on("close",function()
-	{
-		process.send({operation: "report",status: "close"});
-	});
+		if (o.item=="session")
+		{
+			var s=o.session;
+			o.operation="report";
+			o.result=sessions.hasSession(s);
+			process.send(o);
+		}
+	}
+	
 });
 
 

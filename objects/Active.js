@@ -60,6 +60,10 @@ function Active(req,res)
     function Prepare()
     {
         var sid=req.cookies["malache2SESSION"] || sessionPool.create();
+        if (!sessionPool.hasSession(sid))
+        {
+        	sid=sessionPool.create();
+        }
         var session=sessionPool.get(sid);
         if (!session)
         {

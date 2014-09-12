@@ -17,6 +17,7 @@ function ProcessHolder()
 	var heard=0;
 	var wait=0;
 	var that=this;
+	var queryMap=new Object;
 	var t=setInterval(function()
 	{
 		if (wait>conf.scriptTimeout)
@@ -40,11 +41,22 @@ function ProcessHolder()
 		if (o.status=="close")
 		{
 			connections--;
+			return;
 		}
 		if (o.status=="alive")
 		{
 			heart++;
+			return;
 		} 
+		if (o.item=="session")
+		{
+			queryMap[o.session](o.result);
+			return;
+		}
+		if (o.item=="create_session")
+		{
+			map[o.session]=that.id;
+		}
 	});
 	this.join=function(client,content)
 	{
@@ -56,6 +68,11 @@ function ProcessHolder()
 		return connections;
 	};
 	this.id=0;
+	this.hasSession=function(v,fn)
+	{
+		queryMap[v]=fn;
+		wk.send({operation: "query",item: "session",session: v});
+	};
 }
 
 var holders=new Array;
@@ -71,6 +88,33 @@ for (var i=0;i<hlen;i++)
 }
 
 
+function PutConnectionIntoNewLine(client,content,ss)
+{
+	var max=1000;
+	var pos=-1;
+	for (var i=0;i<holders.length;i++)
+	{
+		if (max>holders[i].getConnections())
+		{
+			max=holders[i].getConnections();
+			pos=i;
+		}
+	}
+	try
+	{
+		if (ss)
+		{
+			map[ss]=pos;
+		}
+		holders[pos].join(client,content);
+	}
+	catch (e)
+	{
+		console.log(e);
+		client.end();
+	}
+}
+
 
 
 function Dispatcher()
@@ -81,35 +125,26 @@ function Dispatcher()
 		{
 			try
 			{
-				holders[map[ss]].join(client,content);
+				holders[map[ss]].hasSession(ss,function(rlt)
+				{
+					if (rlt)
+					{
+						holders[map[ss]].join(client,content);
+					}
+					else
+					{
+						PutConnectionIntoNewLine(client,content,ss);
+					}
+				});
 			}
 			catch (e)
 			{
-				console.log(e);
+				console.log(e.stack);
 			}
 		}
 		else
 		{
-			var max=1000;
-			var pos=-1;
-			for (var i=0;i<holders.length;i++)
-			{
-				if (max>holders[i].getConnections())
-				{
-					max=holders[i].getConnections();
-					pos=i;
-				}
-			}
-			try
-			{
-				map[ss]=pos;
-				holders[pos].join(client,content);
-			}
-			catch (e)
-			{
-				console.log(e);
-				client.end();
-			}
+			PutConnectionIntoNewLine(client,content,ss);
 		}
 	};
 }

@@ -7,9 +7,9 @@ for (var i=0;i<12;i++)
     srs+=String(parseInt(Math.random()*Math.random()*17*13*11*23*27)).substring(0,1);
 }
 var sessionName="malache2SESSION";
+var pool=new Object;
 function SessionPool()
 {
-    var pool=new Object;
     function Create(v)
     {
         if (!!v && typeof(v)!="string")
@@ -30,6 +30,7 @@ function SessionPool()
         {
             x+=String(parseInt(Math.random()*Math.random()*17*13*11*23*27)).substring(0,1);
         }
+        x=String(process.pid)+x;
         while (pool[x]!=undefined)
         {
             for (var i=0;i<12;i++)
@@ -43,6 +44,7 @@ function SessionPool()
             delete pool[x].value;
             delete pool[x];
         },conf.sessionTimeout);
+        process.send({operation: "report",item: "create_session",session: v});
         return x;
     }
     function GetSession(sid)
@@ -61,6 +63,14 @@ function SessionPool()
     }
     this.get=GetSession;
     this.create=Create;
+    this.hasSession=function(sid)
+    {
+    	if (pool[sid]==undefined || pool[sid]==null)
+        {
+            return false;
+        }
+        return true;
+    };
 }
 
 

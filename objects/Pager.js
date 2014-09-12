@@ -54,6 +54,7 @@ function LoadJsCode(req,res,session,application,sid,siteConf,jsCode,tpPath,home,
     setImmediate(function()
     {
     	var vm=domain.create();
+    	res.setVM(vm);
         vm.on("error",function(err)
         {
         	//res.error(err);
@@ -96,7 +97,10 @@ function LoadJsCode(req,res,session,application,sid,siteConf,jsCode,tpPath,home,
 	        	//forget it, if there's problem on processing error log.
 	        }
             res.error(err);
-            //vm.dispose();
+            setTimeout(function()
+            {
+            	vm.dispose();
+            },0);
         });
         vm.run(function()
         {

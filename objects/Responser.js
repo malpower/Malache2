@@ -15,6 +15,11 @@ function Responser(client)
     {
         return client;
     };
+    var vm=null;
+    this.setVM=function(v)
+    {
+    	vm=v;
+    };
     var header={"Connection": "close",
                 "Date": (new Date),
                 "Server": "Malache2",
@@ -97,6 +102,13 @@ function Responser(client)
             client.write(responseBody);
             client.end();
         }
+        if (vm)
+        {
+        	setTimeout(function()
+        	{
+        		vm.dispose();
+        	},0);
+    	}
     };
 }
 
