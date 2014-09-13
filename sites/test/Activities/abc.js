@@ -11,7 +11,7 @@ if (request.parameters["OK"]=="die")
 {
 	while (1);
 }
-console.log("INPAGE2");
+console.log(request.GET);
 response.render({picName: fn,params: request.parameters,kk: request.parameters["kk"],random: (new Date).getTime()});
 
 

@@ -49,6 +49,13 @@ function Processor(req,res)
             res.end();
             return;
         }
+        var conType=req.headers["Connection"];
+        conType=conType.toUpperCase();
+        console.log(conType);
+        if (conType=="KEEP-ALIVE")
+        {
+            res.headers["Connection"]="Keep-Alive";
+        }
         res.headers["Content-Length"]=String(stat.size);
         if (!stat.isFile())                         //response 403 if the requesting file is a folder.
         {
@@ -78,7 +85,7 @@ function Processor(req,res)
             res.sendBuffer(chunk);
         }).on("end",function()
         {
-            res.flush();
+            //res.flush();
         }).on("error",function()
         {
             res.headers["Connection"]="Close";

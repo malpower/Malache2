@@ -58,7 +58,6 @@ function Connection(client)
             return;
         }
         var req=new Requester(rawReq,client);
-        var res=new Responser(client);
         if (req.method=="GET")
         {//sovle GET
             try
