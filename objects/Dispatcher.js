@@ -25,6 +25,7 @@ function ProcessHolder()
 			console.log("script timed out.");
 			console.log("process["+wk.pid+"] is now resatart!");
 			holders[that.id]=new ProcessHolder();
+			holders[that.id].id=that.id;
 			wk.kill();
 			clearInterval(t);
 		}

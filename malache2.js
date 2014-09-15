@@ -99,6 +99,7 @@ server.on("error",function(err)
 {//catch errors when listening failed.
 	console.log("server starting failed, check conf.js for port.");
 	console.log(err);
+	process.exit(0);
 });
 
 
