@@ -11,7 +11,13 @@ if (request.parameters["OK"]=="die")
 {
 	while (1); 
 }
-console.log(request.GET);
-response.render({picName: fn,params: request.parameters,kk: request.parameters["kk"],random: (new Date).getTime()});
+sharer.getKey("malpower",function(res)
+{
+    if (res.statusCode==200)
+    {
+        console.log(res.response.value);
+    }
+});
+response.render({rem: session.remember,picName: fn,params: request.parameters,kk: request.parameters["kk"],random: (new Date).getTime()});
 
 

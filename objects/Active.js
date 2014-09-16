@@ -10,9 +10,104 @@ var Tools=require("./Tools");
 var SessionPool=require("./SessionPool");
 var fs=require("fs");
 var Pager=require("./Pager");
+var net=require("net");
 
 
-var application=new Object;
+
+function Sharer()
+{
+	var counter=0;
+	var callbacks=new Object;
+	var npl=-1;
+    var cache=new Buffer(0);
+    var socket=net.connect({port: conf.sharerPort},function()
+    {
+        socket.on("data",function(packet)
+        {
+            cache=Buffer.concat([cache,packet]);
+            PacketReciever();
+        }).on("close",function()
+        {
+            delete cache;
+        });
+    });
+    socket.on("error",function(err)
+    {
+        console.log("SLDFJSLKDFJ");
+    });
+    function PacketReciever()
+    {
+        if (cache.length>=4)
+        {
+            npl=cache.readUInt32BE(0);
+            if (cache.length>=npl)
+            {
+                var tmp=cache.slice(0,npl);
+                cache=cache.slice(npl);
+                PacketProcessor(tmp);
+            }
+        }
+    }
+    function PacketProcessor(pack)
+    {
+        var packet=pack.slice(4).toString("utf8");
+        packet=JSON.parse(packet);
+        var fn=callbacks[packet.stamp];
+        if (typeof(fn)!="function")
+        {
+            return;
+        }
+        fn(packet);
+        delete callbacks[packet.stamp];
+    }
+	function getStamp()
+	{
+		var stamp=String(process.pid);
+		stamp+=String((new Date).getTime());
+		stamp+=String(counter++);
+		return stamp;
+	}
+	this.setKey=function(keyName,value,fn)
+    {
+        var req={type: "operation",
+                 operation: "setKey",
+                 request: {keyName: keyName,
+                           keyValue: value,
+                           dataType: typeof(value)}};
+        req.stamp=getStamp();
+        if (typeof(value)=="object")
+        {
+            if (value instanceof Buffer)
+            {
+                req.request.dataType="buffer";
+            }
+            else if (value instanceof Array)
+            {
+                req.request.dataType="array";
+            }
+        }
+        callbacks[req.stamp]=fn;
+        req=JSON.stringify(req);
+        var buff=new Buffer(req.length+4);
+        buff.write(req,4);
+        buff.writeUInt32BE(buff.length,0);
+        socket.write(buff);
+    };
+    this.getKey=function(keyName,fn)
+    {
+        var req={type: "operation",
+                 operation: "getKey",
+                 request: {keyName: keyName}};
+        req.stamp=getStamp();
+        callbacks[req.stamp]=fn;
+        req=JSON.stringify(req);
+        var buff=new Buffer(req.length+4);
+        buff.write(req,4);
+        buff.writeUInt32BE(buff.length,0);
+        socket.write(buff);
+    };
+}
+var sharer=new Sharer;
 var sessionPool=new SessionPool;
 
 
@@ -82,7 +177,7 @@ function Active(req,res)
             Pager.loadJsCode(req,					//this is the start of execution.
                              res,
                              session,
-                             application,
+                             sharer,
                              sid,
                              siteConf,
                              jsCode,

@@ -5,4 +5,5 @@ module.exports={maxPostSize: 1024*1024*100,
                 handlerLength: 5,
                 scriptTimeout: 10,			//seconds
                 sessionTimeout: 1000*60*10,		//million seconds
+                sharerPort: 888,
                 active: "ajs"};

@@ -80,40 +80,47 @@
                                                                                                      
  */
 
-var net=require("net");
-var Connection=require("./objects/Connection");
-var conf=require("./conf");
-conf.cwd=process.cwd()+"/";
+var cp=require("child_process");
 
+var sharer=cp.fork("./objects/Sharer");
 
-
-
-var server=net.createServer(function(socket)
-{//main server, collect sockets connections simply and create a Connection with sockets collected.
-    new Connection(socket);
-});
-
-server.listen(conf.port);
-
-server.on("error",function(err)
-{//catch errors when listening failed.
-	console.log("server starting failed, check conf.js for port.");
-	console.log(err);
-	process.exit(0);
-});
-
-
-
-
-console.log("============Malache2============");
-console.log("Version: 201409102217D");
-console.log("Server is running on port: "+conf.port);
-console.log("Domains:");
-for (var x in conf.domains)
+sharer.on("message",function(msg)
 {
-	console.log("  "+x);
-}
-console.log("================================");
-
+    var net=require("net");
+    var Connection=require("./objects/Connection");
+    var conf=require("./conf");
+    conf.cwd=process.cwd()+"/";
+    if (msg.status=="online")
+    {
+        console.log("Sharer started!");
+        var server=net.createServer(function(socket)
+        {//main server, collect sockets connections simply and create a Connection with sockets collected.
+            new Connection(socket);
+        });
+        
+        server.listen(conf.port);
+        
+        server.on("error",function(err)
+        {//catch errors when listening failed.
+        	console.log("server starting failed, check conf.js for port.");
+        	console.log(err);
+        	process.exit(0);
+        });
+        
+        
+        
+        
+        
+        console.log("============Malache2============");
+        console.log("Version: 201409102217D");
+        console.log("Server is running on port: "+conf.port);
+        console.log("Domains:");
+        for (var x in conf.domains)
+        {
+        	console.log("  "+x);
+        }
+        console.log("================================");
+    }
+});
 
 

@@ -5,10 +5,10 @@ var domain=require("domain");
   
 
 
-function LoadJsCode(req,res,session,application,sid,siteConf,jsCode,tpPath,home,active)
+function LoadJsCode(req,res,session,sharer,sid,siteConf,jsCode,tpPath,home,active)
 {
     res.headers["Connection"]="Keep-Alive";
-    var jsCode="function(request,response,session,application,malache,home){"+jsCode+"}";
+    var jsCode="function(request,response,session,sharer,malache,home){"+jsCode+"}";
     try
     {
         var pager=(new Function("return "+jsCode+";"))();
@@ -105,7 +105,7 @@ function LoadJsCode(req,res,session,application,sid,siteConf,jsCode,tpPath,home,
         vm.run(function()
         {
             res.setCookie("malache2SESSION",sid);
-            pager(req,res,session,application,new MalacheTool(home),home+"/Templates");
+            pager(req,res,session,sharer,new MalacheTool(home),home+"/Templates");
         });
     });
 }
