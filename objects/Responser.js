@@ -102,13 +102,6 @@ function Responser(client)
             client.write(responseBody);
             client.end();
         }
-        if (vm)
-        {
-        	setTimeout(function()
-        	{
-        		vm.dispose();
-        	},0);
-    	}
     };
 }
 

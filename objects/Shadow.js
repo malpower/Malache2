@@ -15,6 +15,11 @@ process.on("message",function(o,client)
 {
 	if (o.operation=="request")
 	{
+	    if (client==null || client==undefined)
+	    {
+	        console.log("INVALID CLIENT SOCKET");
+	        return;
+	    }
 		client.once("error",function(e)
 		{
 		    //client.removeAllListeners();

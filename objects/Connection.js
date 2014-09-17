@@ -58,8 +58,8 @@ function Connection(client)
             return;
         }
         var req=new Requester(rawReq,client);
-        if (req.method=="GET")
-        {//sovle GET
+        if (req.method=="GET" || req.method=="HEAD")
+        {//sovle GET and HEAD
             try
             {//send request and response to Shadow.
                 dispatcher.joinConnection(req.cookies["malache2SESSION"],client,buffer);

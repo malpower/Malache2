@@ -4,6 +4,7 @@ var QueryString=require("querystring");
 var fs=require("fs");
 var path=require("path");
 var Active=require("./Active");
+var domain=require("domain");
 
 
 
@@ -50,8 +51,11 @@ function Processor(req,res)
             return;
         }
         var conType=req.headers["Connection"];
+        if (conType==undefined)
+        {
+            conType="close";
+        }
         conType=conType.toUpperCase();
-        console.log(conType);
         if (conType=="KEEP-ALIVE")
         {
             res.headers["Connection"]="Keep-Alive";
@@ -78,6 +82,12 @@ function Processor(req,res)
         res.headers["Last-Modified"]=stat.mtime;
         res.headers["Content-Type"]=siteConf.contentTypes[path.extname(filepath)] || "unknow/*";                   //set default content-type.
         res.headers["Content-Length"]=stat.size;
+        if (req.method=="HEAD")
+        {
+            res.headers["Content-Length"]=0;
+            res.sendHeaders();
+            return;
+        }
         res.sendHeaders();
         var rs=fs.createReadStream(filepath,{autoClose: true});
         rs.on("data",function(chunk)

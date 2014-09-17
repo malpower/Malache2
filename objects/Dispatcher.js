@@ -18,6 +18,7 @@ function ProcessHolder()
 	var wait=0;
 	var that=this;
 	var queryMap=new Object;
+	var cbCounter=0;
 	var t=setInterval(function()
 	{
 		if (wait>conf.scriptTimeout)
@@ -51,7 +52,8 @@ function ProcessHolder()
 		} 
 		if (o.item=="session")
 		{
-			queryMap[o.session](o.result);
+			queryMap[o.stamp].fn(o.result);
+			delete queryMap[o.stamp];
 			return;
 		}
 		if (o.item=="create_session")
@@ -71,8 +73,12 @@ function ProcessHolder()
 	this.id=0;
 	this.hasSession=function(v,fn)
 	{
-		queryMap[v]=fn;
-		wk.send({operation: "query",item: "session",session: v});
+	    var stamp=String((new Date).getTime());
+	    stamp+=String(cbCounter++);
+		queryMap[stamp]={fn: fn,
+		                 stamp: stamp,
+		                 ss: v};
+		wk.send({operation: "query",item: "session",session: v,stamp: stamp});
 	};
 }
 
@@ -116,6 +122,8 @@ function PutConnectionIntoNewLine(client,content,ss)
 	}
 }
 
+
+var sockPool=new Array;
 
 
 function Dispatcher()

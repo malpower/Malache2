@@ -58,8 +58,8 @@ function Request(client,recieved)
         buffer=buffer.slice(tmp.indexOf("\r\n\r\n")+4);
         var req=new Requester(rawReq,client);
         var res=new Responser(client);
-        if (req.method=="GET")
-        {//sovle GET
+        if (req.method=="GET" || req.method=="HEAD")
+        {//sovle GET and HEAD
             try
             {//send request and response to Processor.
                 Processor(req,res);
