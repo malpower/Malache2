@@ -1,5 +1,5 @@
-/* this module make a socket connection into a http connection.
- * this Connection support only GET and POST method.
+/* this module makes a socket connections into a http connection.
+ * this Connection supports only GET and POST method.
  * it holds 2 ways of requests, alive and close.
  */
 

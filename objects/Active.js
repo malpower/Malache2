@@ -1,5 +1,5 @@
-/* this module solve active requests.
- * it prepare data, session and parameters for pager.
+/* this module solves active requests.
+ * it prepares data, session and parameters for pager.
  */
 
 
@@ -33,7 +33,7 @@ function Sharer()
     });
     socket.on("error",function(err)
     {
-        console.log("SLDFJSLKDFJ");
+        console.log("Sharer connection error!");
     });
     function PacketReciever()
     {

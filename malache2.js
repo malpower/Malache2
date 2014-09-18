@@ -94,7 +94,7 @@ sharer.on("message",function(msg)
     {
         console.log("Sharer started!");
         var server=net.createServer(function(socket)
-        {//main server, collect sockets connections simply and create a Connection with sockets collected.
+        {//main server, collect socket connections simply and create a Connection with sockets collected.
             new Connection(socket);
         });
         
@@ -110,9 +110,9 @@ sharer.on("message",function(msg)
         
         
         
-        
+        process.title="Malache2 Web Server";
         console.log("============Malache2============");
-        console.log("Version: 201409102217D");
+        console.log("Version: 201409182340D");
         console.log("Server is running on port: "+conf.port);
         console.log("Domains:");
         for (var x in conf.domains)
