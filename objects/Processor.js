@@ -83,7 +83,7 @@ function Processor(req,res)
         res.headers["Content-Type"]=siteConf.contentTypes[path.extname(filepath)] || "application/unknow";                   //set default content-type.
         res.headers["Content-Length"]=stat.size;
         if (req.method=="HEAD")
-        {
+        {//send headers only if the request type is HEAD.
             res.headers["Content-Length"]=0;
             res.sendHeaders();
             return;
