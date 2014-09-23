@@ -93,7 +93,7 @@ function LoadJsCode(req,res,session,sharer,sid,siteConf,jsCode,tpPath,home,activ
 	        }
 	        catch (e)
 	        {
-	            cosnole.log(e.stack);
+	            console.log(e.stack);
 	        	//forget it, if there's problem on processing error log.
 	        }
             res.error(err);
