@@ -112,7 +112,7 @@ sharer.on("message",function(msg)
         
         
         console.log("============Malache2============");
-        console.log("Version: 201409102217D");
+        console.log("Version: 201409251445D");
         console.log("Server is running on port: "+conf.port);
         console.log("Domains:");
         for (var x in conf.domains)
