@@ -46,7 +46,7 @@ function Responser(client)
         }
         if (o.secure==true)
         {
-            v+="secure";
+            v+="secure; ";
         }
         if (typeof(o.expires)=="string")
         {
@@ -68,6 +68,10 @@ function Responser(client)
     };
     this.setCookie=function(k,v)
     {
+        if (typeof(v)=="string" || typeof(v)=="number" || typeof(v)=="boolean" || v instanceof Array)
+        {
+            v={value: v.toString()};
+        }
         cookies[String(k)]=v;
     };
     this.sendHeaders=function()
