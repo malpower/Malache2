@@ -26,7 +26,7 @@ function Responser(client)
                 "Server": "Malache2",
                 "Content-Length": "0",
                 "Content-Type": "text/html;charset=utf-8",
-                "Cache-Control": "private",
+                "Cache-Control": "Private",
                 "Author": "malpower"};
     var cookies=new Object;
     var responseBody=new Buffer(0);

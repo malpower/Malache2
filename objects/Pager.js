@@ -104,6 +104,7 @@ function LoadJsCode(req,res,session,sharer,sid,siteConf,jsCode,tpPath,home,activ
         });
         vm.run(function()
         {
+            res.headers["Cache-Control"]="no-cache";
             pager(req,res,session,sharer,new MalacheTool(home),home+"/Templates");
         });
     });
