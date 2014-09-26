@@ -47,7 +47,7 @@ function LoadJsCode(req,res,session,sharer,sid,siteConf,jsCode,tpPath,home,activ
                 res.end(e.stack);
                 return;
             }
-            res.setCookie("malache2SESSION",sid);
+            res.setSessionId(sid);
             res.end(html);
         });
     };
@@ -93,7 +93,7 @@ function LoadJsCode(req,res,session,sharer,sid,siteConf,jsCode,tpPath,home,activ
 	        }
 	        catch (e)
 	        {
-	            cosnole.log(e.stack);
+	            console.log(e.stack);
 	        	//forget it, if there's problem on processing error log.
 	        }
             res.error(err);
@@ -104,7 +104,7 @@ function LoadJsCode(req,res,session,sharer,sid,siteConf,jsCode,tpPath,home,activ
         });
         vm.run(function()
         {
-            res.setCookie("malache2SESSION",sid);
+            res.headers["Cache-Control"]="no-cache";
             pager(req,res,session,sharer,new MalacheTool(home),home+"/Templates");
         });
     });

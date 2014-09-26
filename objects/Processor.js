@@ -11,6 +11,7 @@ var domain=require("domain");
 function Processor(req,res)
 {
     var url=req.url;
+    
     var vd=conf.domains[req.headers.Host];		//get virtual directory.
     if (typeof(vd)!="string")
     {//check if the virtual directory is correct.
@@ -32,6 +33,12 @@ function Processor(req,res)
         return;
     }
     url=url.split("?")[0];
+    if (url.indexOf("..")!=-1 || url.indexOf(":")!=-1)
+    {
+        res.statusCode=403;
+        res.end("<h1>Error 404</h1><br />File not found!");
+        return false;
+    }
     if (url.substring(url.length-1,url.length)=="/")
     {//if requested url is root, append the defaultPage to url.
         url+=siteConf.defaultPage;
@@ -46,7 +53,7 @@ function Processor(req,res)
         if (err)
         {
             res.statusCode=404;
-            res.write("File not found!");
+            res.write("<h1>Error 404</h1><br />File not found!");
             res.end();
             return;
         }
@@ -67,19 +74,19 @@ function Processor(req,res)
             res.end("<h1>Error 403</h1><br />folder cannot be listed.");
             return false;
         }
-        if (req.headers["If-Modified-Since"]==stat.mtime)               //about cache.
+        if (req.headers["If-Modified-Since"]==String(stat.mtime.toUTCString()))               //about cache.
         {
             res.statusCode=304;
             res.headers["Content-Length"]="0";
-            res.headers["Last-Modified"]=stat.mtime;
+            res.headers["Last-Modified"]=stat.mtime.toUTCString();
             res.headers["Cache-Control"]="Private";
             res.sendHeaders();
-            res.flush();                                       //does not response data body, browser will read this file in it's cache.
+            res.end();                                       //does not response data body, browser will read this file in it's cache.
             return false;
         }
         res.statusCode=200;                                         //response data normally.
         res.headers["Cache-Control"]="Private";
-        res.headers["Last-Modified"]=stat.mtime;
+        res.headers["Last-Modified"]=stat.mtime.toUTCString();
         res.headers["Content-Type"]=siteConf.contentTypes[path.extname(filepath)] || "application/unknow";                   //set default content-type.
         res.headers["Content-Length"]=stat.size;
         if (req.method=="HEAD")
