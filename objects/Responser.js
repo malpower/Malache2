@@ -100,7 +100,6 @@ function Responser(client)
     };
     this.setSessionId=function(sid)
     {
-        console.log("SETTING");
         sessionId=sid;
         delete this.setSessionId;
     };

@@ -67,19 +67,19 @@ function Processor(req,res)
             res.end("<h1>Error 403</h1><br />folder cannot be listed.");
             return false;
         }
-        if (req.headers["If-Modified-Since"]==stat.mtime)               //about cache.
+        if (req.headers["If-Modified-Since"]==String(stat.mtime.getTime()))               //about cache.
         {
             res.statusCode=304;
             res.headers["Content-Length"]="0";
-            res.headers["Last-Modified"]=stat.mtime;
+            res.headers["Last-Modified"]=stat.mtime.getTime();
             res.headers["Cache-Control"]="Private";
             res.sendHeaders();
-            res.flush();                                       //does not response data body, browser will read this file in it's cache.
+            res.end();                                       //does not response data body, browser will read this file in it's cache.
             return false;
         }
         res.statusCode=200;                                         //response data normally.
         res.headers["Cache-Control"]="Private";
-        res.headers["Last-Modified"]=stat.mtime;
+        res.headers["Last-Modified"]=stat.mtime.getTime();
         res.headers["Content-Type"]=siteConf.contentTypes[path.extname(filepath)] || "application/unknow";                   //set default content-type.
         res.headers["Content-Length"]=stat.size;
         if (req.method=="HEAD")
