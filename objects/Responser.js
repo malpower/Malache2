@@ -22,7 +22,7 @@ function Responser(client)
     };
     var sessionId;
     var header={"Connection": "close",
-                "Date": (new Date),
+                "Date": (new Date).toUTCString(),
                 "Server": "Malache2",
                 "Content-Length": "0",
                 "Content-Type": "text/html;charset=utf-8",
