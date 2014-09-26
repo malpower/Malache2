@@ -20,6 +20,7 @@ function Responser(client)
     {
     	vm=v;
     };
+    var sessionId;
     var header={"Connection": "close",
                 "Date": (new Date),
                 "Server": "Malache2",
@@ -31,6 +32,32 @@ function Responser(client)
     var responseBody=new Buffer(0);
     this.headers=header;
     var bufferSent=0;
+    function ReadCookie(name,o)
+    {
+        var v=new String;
+        v=name+"="+o.value+"; ";
+        if (o.hasOwnProperty("path"))
+        {
+            v+="path="+o.path+"; ";
+        }
+        if (o.httpOnly==true)
+        {
+            v+="HttpOnly; ";
+        }
+        if (o.secure==true)
+        {
+            v+="secure";
+        }
+        if (typeof(o.expires)=="string")
+        {
+            v+="expires="+o.expires+"; ";
+        }
+        if (typeof(o.domain)=="string")
+        {
+            v+="domain="+o.domain+"; ";
+        }
+        return v;
+    }
     this.error=function(err)
     {
         this.statusCode=err.statusCode || 500;
@@ -46,17 +73,36 @@ function Responser(client)
     this.sendHeaders=function()
     {
         client.write("HTTP/1.1 "+this.statusCode+" "+(states[this.statusCode] || "OK")+"\r\n");
-        header["Set-Cookie"]=new Array;
-        for (var x in cookies)
-        {
-            header["Set-Cookie"].push(x+"="+cookies[x]);
-        }
-        header["Set-Cookie"]=header["Set-Cookie"].join("; ");
+        // header["Set-Cookie"]=new Array;
+        // for (var x in cookies)
+        // {
+            // header["Set-Cookie"].push(x+"="+cookies[x]);
+        // }
+        // header["Set-Cookie"]=header["Set-Cookie"].join("; ");
+        delete header["Set-Cookie"];
         for (var x in header)
         {
             client.write(x+": "+header[x]+"\r\n");
         }
-        client.write("\r\n");   
+        if (typeof(sessionId)=="string")
+        {
+            client.write("Set-Cookie: malache2SESSION="+sessionId+"; path=/; HttpOnly; \r\n");
+        }
+        for (var x in cookies)
+        {   
+            if (x=="malache2SESSION")
+            {
+                continue;
+            }
+            client.write("Set-Cookie: "+ReadCookie(x,cookies[x])+"\r\n");
+        }
+        client.write("\r\n");  
+    };
+    this.setSessionId=function(sid)
+    {
+        console.log("SETTING");
+        sessionId=sid;
+        delete this.setSessionId;
     };
     this.sendBuffer=function(chunk)
     {
