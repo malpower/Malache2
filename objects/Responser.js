@@ -68,7 +68,7 @@ function Responser(client)
     };
     this.setCookie=function(k,v)
     {
-        cookies[String(k)]=String(v);
+        cookies[String(k)]=v;
     };
     this.sendHeaders=function()
     {
