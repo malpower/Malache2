@@ -56,6 +56,10 @@ function Responser(client)
         {
             v+="domain="+o.domain+"; ";
         }
+        if (typeof(o.maxAge)=="string")
+        {
+            v+="max-age="+o.maxAge+"; ";
+        }
         return v;
     }
     this.error=function(err)
