@@ -150,7 +150,6 @@ function Responser(client)
         else
         {
             header["Content-Length"]=String(responseBody.length);
-            client.write("HTTP/1.1 "+this.statusCode+" "+(states[this.statusCode] || "OK")+"\r\n");
             this.sendHeaders();
             client.write(responseBody);
             client.end();
