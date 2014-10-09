@@ -5,7 +5,7 @@ var domain=require("domain");
   
 
 
-function LoadJsCode(req,res,session,sharer,sid,siteConf,jsCode,tpPath,home,active)
+function LoadJsCode(req,res,session,sharer,sid,siteConf,jsCode,tpPath,home,active,rfn)
 {
     res.headers["Connection"]="Keep-Alive";
     var jsCode="function(request,response,session,sharer,malache,home){"+jsCode+"}";
@@ -37,7 +37,7 @@ function LoadJsCode(req,res,session,sharer,sid,siteConf,jsCode,tpPath,home,activ
             }
             try
             {
-                ro.filename=req.url.split("?")[0];
+                ro.filename=home+"/Templates"+rfn;
                 var html=EJS.render(tpText,ro);
             }
             catch (e)

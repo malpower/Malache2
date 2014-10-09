@@ -183,7 +183,8 @@ function Active(req,res)
                              jsCode,
                              homeTemplates+reqFile+"."+siteConf.template,
                              home,
-                             homeActives+reqFile+".js");
+                             homeActives+reqFile+".js",
+                             reqPath);
         });
     }
     Tools.formatParameters(req,Prepare);            //call the preparer after formatting parameters.
