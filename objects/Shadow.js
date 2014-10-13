@@ -40,7 +40,6 @@ process.on("message",function(o,client)
 			process.send(o);
 		}
 	}
-	
 });
 
 
@@ -49,3 +48,11 @@ setInterval(function()
 {
 	process.send({operation: "report",status: "alive"});
 },parseInt(conf.scriptTimeout*1000/2));
+
+
+
+process.on("uncaughtException",function(e)
+{
+    console.log("["+process.pid+"]:ERROR");
+    console.log(e);
+});
