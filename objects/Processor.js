@@ -11,7 +11,14 @@ var domain=require("domain");
 function Processor(req,res)
 {
     var url=req.url;
-    
+    try
+    {
+        url=decodeURI(url);
+    }
+    catch (e)
+    {
+        //just have a try.
+    }
     var vd=conf.domains[req.headers.Host];		//get virtual directory.
     if (typeof(vd)!="string")
     {//check if the virtual directory is correct.
