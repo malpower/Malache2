@@ -20,11 +20,15 @@ function LoadJsCode(req,res,session,sharer,sid,siteConf,jsCode,tpPath,home,activ
         res.end(e.stack);
         return;
     }
-    res.render=function(ro)
+    res.render=function(ro,ptp)
     {
         if (!ro)
         {
             ro=new Object();
+        }
+        if (typeof(ptp)=="string")
+        {
+            tpPath=home+"/Templates/"+ptp;
         }
         fs.readFile(tpPath,"utf8",function(err,tpText)
         {
