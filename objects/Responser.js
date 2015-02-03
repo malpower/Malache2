@@ -62,6 +62,12 @@ function Responser(client)
         }
         return v;
     }
+    this.redirect=function(loc)
+    {
+        header["Location"]=loc;
+        this.statusCode=302;
+        this.end();
+    };
     this.error=function(err)
     {
         this.statusCode=err.statusCode || 500;
