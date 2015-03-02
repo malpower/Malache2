@@ -80,54 +80,45 @@
                                                                                                      
  */
 
-var cp=require("child_process");
 
-var sharer=cp.fork("./objects/Sharer");
+var tls=require("tls");
+var net=require("net");
+var conf=require("./conf");
 
-sharer.on("message",function(msg)
+if (conf.https!=true)
 {
-    var net=require("net");
-    var Connection=require("./objects/Connection");
-    var conf=require("./conf");
-    conf.cwd=process.cwd()+"/";
-    if (msg.status=="online")
+    console.log("Please set [https] section in conf.js!");
+    process.exit(0);
+}
+
+var cp=require("child_process");
+cp.fork("./malache2");
+
+
+var server=tls.createServer(conf.tls,function(socket)
+{
+    var m=net.connect({host: "127.0.0.1",port: conf.port},function()
     {
-        console.log("Sharer started!");
-        var server=net.createServer(function(socket)
-        {//main server, collect socket connections simply and create a Connection with sockets collected.
-            new Connection(socket);
-        });
-        
-        if (conf.https)
+        socket.pipe(m);
+        m.pipe(socket);
+    });
+    m.on("error",function()
+    {
+        socket.end();
+    });
+    socket.on("error",function()
+    {
+        try
         {
-            server.listen(conf.port,"127.0.0.1");
+            m.end();
         }
-        else
+        catch (e)
         {
-            server.listen(conf.port);
+            //
         }
-        
-        server.on("error",function(err)
-        {//catch errors when listening failed.
-        	console.log("server starting failed, check conf.js for port.");
-        	console.log(err);
-        	process.exit(0);
-        });
-        
-        
-        
-        
-        process.title="Malache2 Web Server";
-        console.log("============Malache2============");
-        console.log("Version: 201503030249D");
-        console.log("Server is running on port: "+conf.port);
-        console.log("Domains:");
-        for (var x in conf.domains)
-        {
-        	console.log("  "+x);
-        }
-        console.log("================================");
-    }
+    });
 });
+
+server.listen(conf.httpsPort);
 
 
