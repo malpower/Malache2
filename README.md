@@ -8,6 +8,11 @@ Malache2 is a web server based on node.js.<br />
 you can build a website/webapp with malache2, and you need write codes in javascript.<br />
 you can download the source code of malache2 directly to run it with node.js.<br />
 sample code has already in the source code.<br />
+[About malache2](https://github.com/malpower/Malache2/wiki/About-malache2)<br />
+[How it works](https://github.com/malpower/Malache2/wiki/How-It-Works)<br />
+[Configure malache2](https://github.com/malpower/Malache2/wiki/Configure-ma)<br />
+[Create a new site](https://github.com/malpower/Malache2/wiki/Create-a-new)<br />
+[API references](https://github.com/malpower/Malache2/wiki/API-References)<br />
 <br />
 when you create a new site, you have to create a folder in /sites, and edit /conf.js to add a domain with that folder.<br />
 we call that folder you created in /sites "virtual directory".<br />
@@ -53,5 +58,6 @@ ctime: <%=ctime%>
 </html>
 ```
 <br /><br />
+At last, you should add a domain in /conf.js in domains column.<br />
 all finished. now, you can go to visit your site.
 for more details, visit [wiki](https://github.com/malpower/Malache2/wiki).
