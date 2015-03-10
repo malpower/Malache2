@@ -170,7 +170,7 @@ Tools.formatParameters=function(req,fn)
         return;
     }
     var ctype=req.headers["Content-Type"];
-    if (ctype.indexOf("multipart/form-data")==-1)
+    if (!ctype || ctype.indexOf("multipart/form-data")==-1)
     {
         req.POST=QueryString.parse(req.getPostBuffer().toString("utf8"));
     }
