@@ -92,7 +92,14 @@ function LoadJsCode(req,res,session,sharer,sid,siteConf,jsCode,tpPath,home,activ
 	        			stack[i]="    at "+scope+"("+blocks.join(":");
 	        		}
 	        	}
-	        	stack[epos]=stack[epos].replace("at eval (","at Activity (");
+	        	try
+	        	{
+	        	  stack[epos]=stack[epos].replace("at eval (","at Activity (");
+        	    }
+        	    catch (e1)
+        	    {
+        	        //
+        	    }
 	        	err.stack=stack.join("\n");
 	        }
 	        catch (e)
