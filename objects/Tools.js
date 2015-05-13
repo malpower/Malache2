@@ -20,7 +20,13 @@ Tools.formatHeader=function(headerText)
         }
         header[tmp[0]]=tmp[1];
     }
+    var uheader=new Object;
+    for (var y in header)
+    {
+        uheader[y.toUpperCase()]=header[y];
+    }
     return {headers: header,
+            uheaders: uheader,
             url: url,
             version: version,
             method: method};
