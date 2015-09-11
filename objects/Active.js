@@ -20,7 +20,7 @@ function Sharer()
 	var callbacks=new Object;      //callback map.
 	var npl=-1;
     var cache=new Buffer(0);
-    var socket=net.connect({port: conf.sharerPort},function()
+    var socket=net.connect({host: "127.0.0.1",port: conf.sharerPort},function()
     {//connect to share when starting.
         socket.on("data",function(packet)
         {
@@ -33,6 +33,7 @@ function Sharer()
     });
     socket.on("error",function(err)
     {
+        console.log(err);
         console.log("Connection error[Share]");   
     });
     function PacketReciever()

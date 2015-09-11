@@ -150,7 +150,7 @@ function Correspondent(socket)
 
 var server=net.createServer(function(socket)
 {
-	if (socket.remoteAddress!="127.0.0.1")
+	if (socket.remoteAddress!="127.0.0.1" && socket.remoteAddress!="::ffff:127.0.0.1")
 	{
 		socket.destroy();
 		return;
