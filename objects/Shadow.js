@@ -8,13 +8,19 @@ var Request=require("./Request");
 var EventEmitter=require('events').EventEmitter;
 var SessionPool=require("./SessionPool");
 var sessions=new SessionPool;
+var tsock;
 
 
-
-process.on("message",function(o,client)
+process.on("message",function(o,sock)
 {
+    
+    if (o.operation=="socket")
+    {
+        tsock=sock;
+    }
 	if (o.operation=="request")
 	{
+	    var client=tsock;
 	    if (client==null || client==undefined)
 	    {
 	        console.log("INVALID CLIENT SOCKET");

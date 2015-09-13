@@ -63,7 +63,8 @@ function ProcessHolder()
 	});
 	this.join=function(client,content)
 	{
-		wk.send({operation: "request",recieved: content},client);
+	    wk.send({operation: "socket"},client);
+		wk.send({operation: "request",recieved: content});
 		connections++;
 	};
 	this.getConnections=function()
