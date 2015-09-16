@@ -1,25 +1,28 @@
-var Tools=require("./Tools");
-var net=require("net");
-var Requester=require("./Requester");
-var Responser=require("./Responser");
-var Processor=require("./Processor");
-var conf=require("../conf");
-var cp=require("child_process");
+"use strict";
+
+
+const Tools=require("./Tools");
+const net=require("net");
+const Requester=require("./Requester");
+const Responser=require("./Responser");
+const Processor=require("./Processor");
+let conf=require("../conf");
+const cp=require("child_process");
 
 
 
 
 function ProcessHolder()
 {
-	var wk=cp.fork("./objects/Shadow");
-	var connections=0;
-	var heart=0;
-	var heard=0;
-	var wait=0;
-	var that=this;
-	var queryMap=new Object;
-	var cbCounter=0;
-	var t=setInterval(function()
+	let wk=cp.fork("./objects/Shadow");
+	let connections=0;
+	let heart=0;
+	let heard=0;
+	let wait=0;
+	let that=this;
+	let queryMap=new Object;
+	let cbCounter=0;
+	let t=setInterval(function()
 	{
 		if (wait>conf.scriptTimeout)
 		{
@@ -49,7 +52,7 @@ function ProcessHolder()
 		{
 			heart++;
 			return;
-		} 
+		}
 		if (o.item=="session")
 		{
 			queryMap[o.stamp].fn(o.result);
@@ -89,7 +92,7 @@ var map=new Object;
 
 var hlen=conf.handlerLength;
 
-for (var i=0;i<hlen;i++)
+for (let i=0;i<hlen;i++)
 {
 	holders[i]=new ProcessHolder;
 	holders[i].id=i;
@@ -98,9 +101,9 @@ for (var i=0;i<hlen;i++)
 
 function PutConnectionIntoNewLine(client,content,ss)
 {
-	var max=1000;
-	var pos=-1;
-	for (var i=0;i<holders.length;i++)
+	let max=1000;
+	let pos=-1;
+	for (let i=0;i<holders.length;i++)
 	{
 		if (max>holders[i].getConnections())
 		{

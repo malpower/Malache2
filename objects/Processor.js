@@ -1,16 +1,20 @@
-var Tools=require("./Tools");
-var conf=require("../conf");
-var QueryString=require("querystring");
-var fs=require("fs");
-var path=require("path");
-var Active=require("./Active");
-var domain=require("domain");
+"use strict";
+
+
+
+const Tools=require("./Tools");
+const conf=require("../conf");
+const QueryString=require("querystring");
+const fs=require("fs");
+const path=require("path");
+const Active=require("./Active");
+const domain=require("domain");
 
 
 
 function Processor(req,res)
 {
-    var url=req.url;
+    let url=req.url;
     try
     {
         url=decodeURI(url);
@@ -19,16 +23,17 @@ function Processor(req,res)
     {
         //just have a try.
     }
-    var vd=conf.domains[req.headers.Host];		//get virtual directory.
+    let vd=conf.domains[req.headers.Host];		//get virtual directory.
     if (typeof(vd)!="string")
     {//check if the virtual directory is correct.
         res.statusCode=503;
         res.end("BAD DOMAIN!");
         return;
     }
+    let siteConf;
     try
     {//get configurations of requested virtual directory.
-        var siteConf=require("../"+vd+"/conf.js");
+        siteConf=require("../"+vd+"/conf.js");
     }
     catch (e)
     {

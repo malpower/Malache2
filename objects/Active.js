@@ -1,26 +1,28 @@
+"use strict";
+
 /* this module solves active requests.
  * it prepares data, session and parameters for pager.
  */
 
 
 
-var conf=require("../conf");
-var Path=require("path");
-var Tools=require("./Tools");
-var SessionPool=require("./SessionPool");
-var fs=require("fs");
-var Pager=require("./Pager");
-var net=require("net");
+const conf=require("../conf");
+const Path=require("path");
+const Tools=require("./Tools");
+const SessionPool=require("./SessionPool");
+const fs=require("fs");
+const Pager=require("./Pager");
+const net=require("net");
 
 
 
 function Sharer()
 {//This is a class that can communicate with Sharer.js.
-	var counter=0;
-	var callbacks=new Object;      //callback map.
-	var npl=-1;
-    var cache=new Buffer(0);
-    var socket=net.connect({host: "127.0.0.1",port: conf.sharerPort},function()
+	let counter=0;
+	let callbacks=new Object;      //callback map.
+	let npl=-1;
+	let cache=new Buffer(0);
+	let socket=net.connect({host: "127.0.0.1",port: conf.sharerPort},function()
     {//connect to share when starting.
         socket.on("data",function(packet)
         {
@@ -28,13 +30,13 @@ function Sharer()
             PacketReciever();                   //buffer checking.
         }).on("close",function()
         {
-            delete cache;
+            cache=null;
         });
     });
     socket.on("error",function(err)
     {
         console.log(err);
-        console.log("Connection error[Share]");   
+        console.log("Connection error[Share]");
     });
     function PacketReciever()
     {//Buffer checker, if there is a packet in buffer, pick it out, and solve it.
@@ -43,7 +45,7 @@ function Sharer()
             npl=cache.readUInt32BE(0);
             if (cache.length>=npl)
             {
-                var tmp=cache.slice(0,npl);
+                let tmp=cache.slice(0,npl);
                 cache=cache.slice(npl);
                 PacketProcessor(tmp);               //solve the packet.
             }
@@ -51,9 +53,9 @@ function Sharer()
     }
     function PacketProcessor(pack)
     {
-        var packet=pack.slice(4).toString("utf8");
+        let packet=pack.slice(4).toString("utf8");
         packet=JSON.parse(packet);
-        var fn=callbacks[packet.stamp];                 //pick out the callback of the packet with 'stamp' column in the packet.
+        let fn=callbacks[packet.stamp];                 //pick out the callback of the packet with 'stamp' column in the packet.
         if (typeof(fn)!="function")
         {
             return;
@@ -63,14 +65,14 @@ function Sharer()
     }
 	function getStamp()
 	{//this function returns a stamp simply. The stamp must be unque.
-		var stamp=String(process.pid);
+		let stamp=String(process.pid);
 		stamp+=String((new Date).getTime());
 		stamp+=String(counter++);
 		return stamp;
 	}
 	this.setKey=function(keyName,value,fn)
     {//set a key/value to share.
-        var req={type: "operation",         //request packet.
+        let req={type: "operation",         //request packet.
                  operation: "setKey",
                  request: {keyName: keyName,
                            keyValue: value,
@@ -89,20 +91,20 @@ function Sharer()
         }
         callbacks[req.stamp]=fn;                //bind callback.
         req=JSON.stringify(req);
-        var buff=new Buffer(req.length+4);
+        let buff=new Buffer(req.length+4);
         buff.write(req,4);
         buff.writeUInt32BE(buff.length,0);
         socket.write(buff);
     };
     this.getKey=function(keyName,fn)
     {//get a key/value from share.
-        var req={type: "operation",
+        let req={type: "operation",
                  operation: "getKey",
                  request: {keyName: keyName}};
         req.stamp=getStamp();
         callbacks[req.stamp]=fn;
         req=JSON.stringify(req);
-        var buff=new Buffer(req.length+4);
+        let buff=new Buffer(req.length+4);
         buff.write(req,4);
         buff.writeUInt32BE(buff.length,0);
         socket.write(buff);
@@ -120,25 +122,26 @@ function Active(req,res)
     {//if the Host header is not set, return.
         return false;
     }
-    var host=req.headers["Host"];
+    let host=req.headers["Host"];
+	let siteConf;
     try
     {//get the environment of the domain.
-        var siteConf=require("../"+conf.domains[host]+"/conf");
-        var home="./"+conf.domains[host];
-        var homeTemplates=home+"/Templates";
-        var homeActives=home+"/Activities";
-        var homeRequires=home+"/Plugs";
+        siteConf=require("../"+conf.domains[host]+"/conf");
     }
     catch (e)
     {
         return false;
     }
-    var reqPath=req.url.split("?")[0];
+	const home="./"+conf.domains[host];
+	const homeTemplates=home+"/Templates";
+	const homeActives=home+"/Activities";
+	const homeRequires=home+"/Plugs";
+    let reqPath=req.url.split("?")[0];
     if (reqPath.substring(reqPath.length-1,reqPath.length)=="/")
     {//check if the request url is root.
         reqPath+=siteConf.defaultPage;      //append default page to request url.
     }
-    var ename=Path.extname(reqPath);    //get extension name.
+    let ename=Path.extname(reqPath);    //get extension name.
     if (ename==("."+siteConf.template))
     {//if the extension name is template type, return 404.
         res.statusCode=404;
@@ -151,16 +154,16 @@ function Active(req,res)
     }
     res.headers["Content-Type"]=siteConf.contentTypes[ename] || "application/unknow";
     	//set content-type header of response.
-    
-    var reqFile=reqPath.substring(0,reqPath.lastIndexOf("."));
+
+    let reqFile=reqPath.substring(0,reqPath.lastIndexOf("."));
     function Prepare()
     {//invoking preparer.
-        var sid=req.cookies["malache2SESSION"] || sessionPool.create();
+        let sid=req.cookies["malache2SESSION"] || sessionPool.create();
         if (!sessionPool.hasSession(sid))
         {//if the session is not existing, create it.
         	sid=sessionPool.create();
         }
-        var session=sessionPool.get(sid);
+        let session=sessionPool.get(sid);
         if (!session)
         {//if the session is not available, recreate it.
             sessionPool.create(sid);

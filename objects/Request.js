@@ -1,3 +1,6 @@
+"use strict";
+
+
 /* this module make a socket connection into a http connection.
  * this Connection support only GET and POST method.
  * it holds 2 ways of requests, alive and close.
@@ -7,13 +10,13 @@
 
 
 
-var Tools=require("./Tools");
-var net=require("net");
-var Requester=require("./Requester");
-var Responser=require("./Responser");
-var Processor=require("./Processor");
-var conf=require("../conf");
-var cp=require("child_process");
+const Tools=require("./Tools");
+const net=require("net");
+const Requester=require("./Requester");
+const Responser=require("./Responser");
+const Processor=require("./Processor");
+let conf=require("../conf");
+const cp=require("child_process");
 
 
 function Request(client,recieved)
@@ -22,8 +25,8 @@ function Request(client,recieved)
     {
         return false;
     }
-    var postLength=0;
-    var buffer=new Buffer(0);
+    let postLength=0;
+    let buffer=new Buffer(0);
     function CheckBuffer(chunk)
     {
         buffer=Buffer.concat([buffer,chunk]);
@@ -32,16 +35,17 @@ function Request(client,recieved)
             client.once("data",CheckBuffer);
             return;
         }
-        var tmp=buffer.toString("ascii");
+        let tmp=buffer.toString("ascii");
         if (tmp.indexOf("\r\n\r\n")==-1)
         {
             client.once("data",CheckBuffer);
-            return;     
+            return;
         }
-        var headerText=tmp.substring(0,tmp.indexOf("\r\n\r\n"));
+        let headerText=tmp.substring(0,tmp.indexOf("\r\n\r\n"));
+        let rawReq;
         try
         {
-            var rawReq=Tools.formatHeader(headerText);
+            rawReq=Tools.formatHeader(headerText);
         }
         catch (e)
         {
@@ -52,12 +56,12 @@ function Request(client,recieved)
         {
             client.end();
             client.destroy();
-            delete buffer;
+            buffer=null;
             return;
         }
         buffer=buffer.slice(tmp.indexOf("\r\n\r\n")+4);
-        var req=new Requester(rawReq,client);
-        var res=new Responser(client);
+        let req=new Requester(rawReq,client);
+        let res=new Responser(client);
         if (req.method=="GET" || req.method=="HEAD")
         {//sovle GET and HEAD
             try
@@ -92,10 +96,10 @@ function Request(client,recieved)
         {
             if (buffer.length+chunk.length>conf.maxPostSize)
             {//post data out of limit.
-                delete req;
-                delete res;
-                delete postData;
-                client.end(Tools.setError(400,"POST DATA IS TOO BIG!"));
+                req=null;
+                res=null;
+                postData=null;
+                client.end(Tools.setError(502,"POST DATA IS TOO BIG!"));
                 client.destroy();
                 return;
             }
@@ -105,7 +109,7 @@ function Request(client,recieved)
                 client.once("data",ReadPost);
                 return;
             }
-            var postData=buffer.slice(0,postLength);
+            let postData=buffer.slice(0,postLength);
             buffer=buffer.slice(postLength);
             try
             {
@@ -131,7 +135,7 @@ function Request(client,recieved)
         //console.log(e.stack);
     }).on("close",function()
     {
-        delete buffer;
+        buffer=null;
     });
 }
 
