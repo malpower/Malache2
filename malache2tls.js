@@ -1,3 +1,7 @@
+"use strict";
+
+
+
 /* This simple http server is made by malpower
  * for testing web applications of mobile.
  * This porgram is based on Node.js which is
@@ -7,21 +11,21 @@
  * it will be fast.
  * You can also share your files on http with
  * this simple http server.Conf.js is a configure
- * file for this simple server.Anthor named 
+ * file for this simple server.Anthor named
  * malpower who is a web programmer in Chengdu.
  * This is the seconds edition of malache, you
  * can visit [https://github.com/malpower/Malache2]
  * to get the latest code.
  * Email: malpower@ymail.com
- * 
- ======================================================================================================================== 
- * 
- 
+ *
+ ========================================================================================================================
+ *
+
 
                             #                         |-------------------------------------------------------------|
                            ###                        |                                                             |
                       ##  #####  ##                   |         #                #                                  |
-                       ###########                    |        ###             #####                                | 
+                       ###########                    |        ###             #####                                |
                          # \ \ #                      |      #######            # #                                 |
                          #\ \ \#                      |  ###############                                            |
                          # \ \ #                      |    ###########                                              |
@@ -35,55 +39,56 @@
          ==========================================   |                                                             |
         ============================================  |                                                             |
       =============================================== |-------------------------------------------------------------|
-                                                                                                               
-                                                                                                     
-                                                                                                     
-                                                                                                     
-                                                                                                     
-                           *      *           *        *****      ******                                
-                          * *    * *         * *       *    *     *                                   
-                         *   *  *   *       *   *      *     *    ******                              
-                         *     *    *      *******     *    *     *                                  
-                         *     *    *     *       *    *****      ******                               
-                                                                                                     
-                                                                                                     
-                                             *****     *    *                                           
-                                               *       * *  *                                       
-                                               *       *  * *                                        
-                                               *       *   **                                        
-                                             *****     *    *                                        
-                                                                  
-                                                                                                     
-                                                                                                                                        
-                          ***      *    *     *****     *    *         *                                         
-                         *   *     *    *       *       * *  *        * *                                         
-                         *         ******       *       *  * *       *   *                                        
-                         *   *     *    *       *       *   **      *******                          
-                          ***      *    *     *****     *    *     *       *                                      
-                                                                                                 
-                                                                                                     
-                                                                                                     
-                                                                                                     
 
-                                                                                                     
-                                                                                                     
-                                                                                                     
-                                                                                                     
-                                                                                                     
-                                                                                                     
+
+
+
+
+                           *      *           *        *****      ******
+                          * *    * *         * *       *    *     *
+                         *   *  *   *       *   *      *     *    ******
+                         *     *    *      *******     *    *     *
+                         *     *    *     *       *    *****      ******
+
+
+                                             *****     *    *
+                                               *       * *  *
+                                               *       *  * *
+                                               *       *   **
+                                             *****     *    *
+
+
+
+                          ***      *    *     *****     *    *         *
+                         *   *     *    *       *       * *  *        * *
+                         *         ******       *       *  * *       *   *
+                         *   *     *    *       *       *   **      *******
+                          ***      *    *     *****     *    *     *       *
+
+
+
+
+
+
+
+
+
+
+
 =======================================================================================================================
-                                                                                                     
-                                                                                                     
-                                                                                                     
-                                                                                                     
-                                                                                                     
-                                                                                                     
+
+
+
+
+
+
  */
 
 
 var tls=require("tls");
 var net=require("net");
 var conf=require("./conf");
+let http=require("http");
 
 if (conf.https!=true)
 {
@@ -97,8 +102,10 @@ cp.fork("./malache2");
 
 var server=tls.createServer(conf.tls,function(socket)
 {
+    console.log("SDLFJSDLKFJ");
     var m=net.connect({host: "127.0.0.1",port: conf.port},function()
     {
+        console.log("CONNECTED");
         socket.pipe(m);
         m.pipe(socket);
     });
@@ -118,7 +125,28 @@ var server=tls.createServer(conf.tls,function(socket)
         }
     });
 });
-
+server.on("error",function(e)
+{
+    console.log(e);
+});
 server.listen(conf.httpsPort);
 
 
+
+let redirectServer=http.createServer(function(req,res)
+{
+    let domain=req.headers["host"];
+    if (domain.indexOf(":")!=-1)
+    {
+        domain=domain.split(":")[0];
+    }
+    if (conf.httpsPort!=443)
+    {
+        domain+=":"+conf.httpsPort;
+    }
+    let url=domain+req.url;
+    res.setHeader("Location","https://"+url);
+    res.statusCode=302;
+    res.end();
+});
+redirectServer.listen(conf.redirPort);
