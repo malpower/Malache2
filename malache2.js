@@ -125,7 +125,16 @@ sharer.on("message",function(msg)
         process.title="Malache2 Web Server";
         console.log("============Malache2============");
         console.log("Version: 201509131205D");
-        console.log("Server is running on port: "+conf.port);
+        if (conf.https==true)
+        {
+            console.log("Https port is on: "+conf.httpsPort);
+            console.log("Internal HTTP server is on: "+conf.port);
+            console.log("Redirect server port is on: "+conf.redirPort);
+        }
+        else
+        {
+            console.log("Server is running on port: "+conf.port);
+        }
         console.log("Domains:");
         for (let x in conf.domains)
         {
