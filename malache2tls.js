@@ -133,7 +133,12 @@ server.listen(conf.httpsPort);
 
 let redirectServer=http.createServer(function(req,res)
 {
-    let domain=req.headers["host"];
+    let domain=req.headers["host"] || req.headers["Host"] || req.headers["HOST"];
+    if (domain==undefined)
+    {
+        res.end();
+        return;
+    }
     if (domain.indexOf(":")!=-1)
     {
         domain=domain.split(":")[0];
