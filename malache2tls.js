@@ -102,10 +102,8 @@ cp.fork("./malache2");
 
 var server=tls.createServer(conf.tls,function(socket)
 {
-    console.log("SDLFJSDLKFJ");
     var m=net.connect({host: "127.0.0.1",port: conf.port},function()
     {
-        console.log("CONNECTED");
         socket.pipe(m);
         m.pipe(socket);
     });
