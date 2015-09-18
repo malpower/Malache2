@@ -85,10 +85,10 @@
  */
 
 
-var tls=require("tls");
-var net=require("net");
-var conf=require("./conf");
-let http=require("http");
+const tls=require("tls");
+const net=require("net");
+const conf=require("./conf");
+const http=require("http");
 
 if (conf.https!=true)
 {
@@ -96,13 +96,13 @@ if (conf.https!=true)
     process.exit(0);
 }
 
-var cp=require("child_process");
+let cp=require("child_process");
 cp.fork("./malache2");
 
 
-var server=tls.createServer(conf.tls,function(socket)
+let server=tls.createServer(conf.tls,function(socket)
 {
-    var m=net.connect({host: "127.0.0.1",port: conf.port},function()
+    let m=net.connect({host: "127.0.0.1",port: conf.port},function()
     {
         socket.pipe(m);
         m.pipe(socket);
