@@ -59,5 +59,8 @@ ctime: <%=ctime%>
 ```
 <br /><br />
 At last, you should add a domain in /conf.js in domains column.<br />
-all finished. now, you can go to visit your site.
+all finished. now, you can go to visit your site by starting it with 
+```bash
+node start<br />
+```
 for more details, visit [wiki](https://github.com/malpower/Malache2/wiki).
