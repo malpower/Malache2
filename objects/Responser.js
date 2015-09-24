@@ -133,7 +133,7 @@ function Responser(client)
     {
         if (!(chunk instanceof Buffer) && !(typeof(chunk)=="string"))
         {
-            throw {message: "argument must be a string or a buffer!"};
+            throw {message: "argument must be a string or a buffer, at responser.write()/responser.end()"};
         }
         if (typeof(chunk)=="string")
         {
