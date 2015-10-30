@@ -9,6 +9,8 @@ const Processor=require("./Processor");
 let conf=require("../conf");
 const cp=require("child_process");
 
+let gCounter=0;
+
 
 
 
@@ -66,9 +68,12 @@ function ProcessHolder()
 	});
 	this.join=function(client,content)
 	{
-	    wk.send({operation: "socket"},client);
-		wk.send({operation: "request",recieved: content});
+	    var id=(new Date).getTime();
+	    id=String(id)+gCounter;
+	    wk.send({operation: "socket",id: id},client);
+		wk.send({operation: "request",recieved: content,id: id});
 		connections++;
+		gCounter++;
 	};
 	this.getConnections=function()
 	{

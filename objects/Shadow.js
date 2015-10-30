@@ -8,7 +8,7 @@ var Request=require("./Request");
 var EventEmitter=require('events').EventEmitter;
 var SessionPool=require("./SessionPool");
 var sessions=new SessionPool;
-var tsock;
+var tsmap=new Object;
 
 
 process.on("message",function(o,sock)
@@ -16,11 +16,12 @@ process.on("message",function(o,sock)
     
     if (o.operation=="socket")
     {
-        tsock=sock;
+        tsmap[o.id]=sock;
+        sock.resume();
     }
 	if (o.operation=="request")
 	{
-	    var client=tsock;
+	    var client=tsmap[o.id];
 	    if (client==null || client==undefined)
 	    {
 	        console.log("INVALID CLIENT SOCKET");
@@ -34,6 +35,8 @@ process.on("message",function(o,sock)
 			process.send({operation: "report",status: "close"});
 		});
 	    var rec=new Buffer(o.recieved);
+	    console.log("---------======--------");
+	    console.log(rec.toString().split("\r\n")[0]);
 		Request(client,rec);
 	}
 	if (o.operation=="query")

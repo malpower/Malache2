@@ -44,7 +44,7 @@ function SessionPool()
             delete pool[x].value;
             delete pool[x];
         },conf.sessionTimeout);
-        process.send({operation: "report",item: "create_session",session: x});
+        //process.send({operation: "report",item: "create_session",session: x});
         return x;
     }
     function GetSession(sid)

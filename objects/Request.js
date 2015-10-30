@@ -35,7 +35,7 @@ function Request(client,recieved)
             client.once("data",CheckBuffer);
             return;
         }
-        let tmp=buffer.toString("ascii");
+        let tmp=buffer.toString("utf8");
         if (tmp.indexOf("\r\n\r\n")==-1)
         {
             client.once("data",CheckBuffer);
@@ -50,15 +50,14 @@ function Request(client,recieved)
         catch (e)
         {
             client.end(Tools.set500Error("Bad header format!"));
-            client.destroy();
         }
         if (typeof(rawReq.url)!="string" || typeof(rawReq.version)!="string")
         {
             client.end();
-            client.destroy();
             buffer=null;
             return;
         }
+        
         buffer=buffer.slice(tmp.indexOf("\r\n\r\n")+4);
         let req=new Requester(rawReq,client);
         let res=new Responser(client);
@@ -67,13 +66,13 @@ function Request(client,recieved)
             try
             {//send request and response to Processor.
                 Processor(req,res);
+                
             }
             catch (e)
             {
                 //debug
                 console.log(e.stack);
                 client.end(Tools.set500Error(String(e.stack)));
-                client.destroy();
             }
             try
             {
@@ -89,7 +88,6 @@ function Request(client,recieved)
         if (req.method!="POST")
         {
             client.end(Tools.setError(400,"ONLY POST AND GET HAVE BEEN SUPPORTED!"));
-            client.destroy();
             return false;
         }
         function ReadPost(chunk)
@@ -100,7 +98,6 @@ function Request(client,recieved)
                 res=null;
                 postData=null;
                 client.end(Tools.setError(502,"POST DATA IS TOO BIG!"));
-                client.destroy();
                 return;
             }
             buffer=Buffer.concat([buffer,chunk]);
@@ -109,7 +106,8 @@ function Request(client,recieved)
                 client.once("data",ReadPost);
                 return;
             }
-            let postData=buffer.slice(0,postLength);
+            let postData;
+            postData=buffer.slice(0,postLength);
             buffer=buffer.slice(postLength);
             try
             {
