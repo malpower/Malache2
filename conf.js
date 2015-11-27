@@ -1,7 +1,7 @@
 var fs=require("fs");
 module.exports={maxPostSize: 1024*1024*100,
                 domains: {"192.168.0.179": "sites/test",
-                          "cnctug1it003l": "../AssetsManagementSystem"},
+                          "cnctug0it666d": "../AssetsManagementSystem"},
                 template: "xml",
                 port: 80,
                 httpsPort: 443,
@@ -12,6 +12,7 @@ module.exports={maxPostSize: 1024*1024*100,
                 sessionTimeout: 1000*60*30,		//million seconds
                 sharerPort: 19987,
                 active: "ajs",
+                cacheControl: "no-cache",
                 tls:{key: fs.readFileSync('./ca/server.key'),
                      requestCert: false,
                      cert: fs.readFileSync('./ca/server.crt')}};
