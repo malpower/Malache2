@@ -1,6 +1,6 @@
 var fs=require("fs");
 module.exports={maxPostSize: 1024*1024*100,
-                domains: {"192.168.0.179": "sites/test",
+                domains: {"127.0.0.1": "../../Projects/WebSamples",
                           "cnctug0it666d": "../AssetsManagementSystem"},
                 template: "xml",
                 port: 80,

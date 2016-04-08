@@ -119,6 +119,18 @@ function LoadJsCode(req,res,session,sharer,sid,siteConf,jsCode,tpPath,home,activ
         vm.run(function()
         {
             res.headers["Cache-Control"]="no-cache";
+            res.getClient().removeAllListeners("error");
+            res.onerror=function(){};
+            res.onclose=function(){};
+            res.getClient().removeAllListeners("end");
+            res.getClient().on("end",function()
+            {
+                res.onclose();
+            });
+            res.getClient().on("error",function(e)
+            {
+                res.onerror(e);
+            });
             pager(req,res,session,sharer,new MalacheTool(home),home+"/Templates");
         });
     });
